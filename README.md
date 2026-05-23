@@ -1,8 +1,9 @@
-# 👓 E-Commerce Website for JB Optician (Sponsored)
-
 <div align="center">
 
-### 🌐 Full-Stack Spectacles E-Commerce Platform  
+# 👓 E-Commerce Website for JB Optician (Sponsored)
+
+### 🌐 Full-Stack Spectacles E-Commerce Platform
+
 ### 🕶️ Virtual Try-On • 💳 Secure Payments • 📊 Analytics • 📧 Marketing Automation
 
 ---
@@ -40,7 +41,7 @@ The project demonstrates practical implementation of real-world e-commerce archi
 
 ---
 
-# 🖥️ Responsive Frontend Development
+## 🖥️ Responsive Frontend Development
 
 Developed a fully responsive and visually modern user interface optimized for desktop, tablet, and mobile devices.
 
@@ -56,7 +57,7 @@ Developed a fully responsive and visually modern user interface optimized for de
 
 ---
 
-# 🔐 Authentication & User Management
+## 🔐 Authentication & User Management
 
 Implemented secure customer authentication and account management systems.
 
@@ -71,7 +72,7 @@ Implemented secure customer authentication and account management systems.
 
 ---
 
-# 🕶️ 3D Virtual Try-On Feature
+## 🕶️ 3D Virtual Try-On Feature
 
 Integrated an advanced virtual try-on system allowing users to preview spectacles digitally before purchasing.
 
@@ -86,7 +87,7 @@ This feature significantly improves the overall customer buying experience by re
 
 ---
 
-# 🛒 E-Commerce Functionalities
+## 🛒 E-Commerce Functionalities
 
 Developed complete shopping workflows and online purchasing systems.
 
@@ -103,7 +104,7 @@ Developed complete shopping workflows and online purchasing systems.
 
 ---
 
-# 💳 Razorpay Payment Gateway Integration
+## 💳 Razorpay Payment Gateway Integration
 
 Integrated Razorpay payment services for secure and smooth online transactions.
 
@@ -117,7 +118,7 @@ Integrated Razorpay payment services for secure and smooth online transactions.
 
 ---
 
-# 🤖 Chatbot Integration
+## 🤖 Chatbot Integration
 
 Integrated chatbot support functionality to improve customer interaction and product assistance.
 
@@ -129,7 +130,7 @@ Integrated chatbot support functionality to improve customer interaction and pro
 
 ---
 
-# 📧 OmniSend Email Marketing Automation
+## 📧 OmniSend Email Marketing Automation
 
 Integrated OmniSend for customer communication and marketing workflows.
 
@@ -143,7 +144,7 @@ Integrated OmniSend for customer communication and marketing workflows.
 
 ---
 
-# 📊 Google Analytics Integration
+## 📊 Google Analytics Integration
 
 Implemented Google Analytics systems for monitoring website traffic and user behavior.
 
@@ -157,7 +158,7 @@ Implemented Google Analytics systems for monitoring website traffic and user beh
 
 ---
 
-# 🛠️ Admin Dashboard & Management System
+## 🛠️ Admin Dashboard & Management System
 
 Developed a complete admin management system for handling business operations efficiently.
 
@@ -173,7 +174,7 @@ Developed a complete admin management system for handling business operations ef
 
 ---
 
-# ⚡ Performance & Optimization
+## ⚡ Performance & Optimization
 
 Focused on improving website speed, responsiveness, accessibility, and overall customer experience.
 
@@ -193,7 +194,7 @@ The repository includes a complete screenshots PDF showcasing all major modules 
 
 ### Included Screenshots
 
-## 🌐 Customer Side
+### 🌐 Customer Side
 - Home Page
 - Product Listing Pages
 - Product Detail Pages
@@ -207,21 +208,19 @@ The repository includes a complete screenshots PDF showcasing all major modules 
 - Customer Dashboard
 - Help Centre
 
-## 🛠️ Admin Side
+### 🛠️ Admin Side
 - Admin Login
 - Admin Dashboard
 - Product Management Dashboard
 - Page Management Dashboard
 
-## 📊 Marketing & Analytics
+### 📊 Marketing & Analytics
 - Google Analytics Dashboard
 - OmniSend Dashboard
 - Real-Time Audience Dashboard
 
 📄 Complete Screenshots PDF:  
 https://drive.google.com/file/d/1QgVGuTTb7g-qlkwx3n4N2ZhMCsCbcbfd/view
-
-The screenshots showcase the actual implementation and workflows of the platform including frontend systems, backend dashboards, customer workflows, payment integrations, analytics systems, and marketing automation features. 0
 
 ---
 
@@ -231,48 +230,48 @@ The repository includes a complete walkthrough/demo video showcasing the full fu
 
 ### Demonstrated Features
 
-## 🕶️ Virtual Try-On System
+### 🕶️ Virtual Try-On System
 - Interactive spectacles try-on experience
 - Real-time product visualization
 - Enhanced customer engagement workflow
 
-## 🤖 Chatbot Integration
+### 🤖 Chatbot Integration
 - Customer support chatbot
 - Product recommendation interaction
 - Automated support experience
 
-## 🛒 E-Commerce Workflow
+### 🛒 E-Commerce Workflow
 - Product browsing
 - Product filtering
 - Cart management
 - Checkout process
 - Order placement workflow
 
-## 💳 Razorpay Payment Integration
+### 💳 Razorpay Payment Integration
 - Secure payment workflow
 - UPI & card payment systems
 - Payment gateway integration
 - Razorpay dashboard monitoring
 
-## 👤 Customer Account System
+### 👤 Customer Account System
 - User registration & login
 - Customer dashboard
 - Account management
 - Order handling
 
-## 🛠️ Admin Dashboard
+### 🛠️ Admin Dashboard
 - Product management
 - Content management
 - Customer management
 - Admin workflows
 
-## 📊 Analytics & Monitoring
+### 📊 Analytics & Monitoring
 - Google Analytics integration
 - Traffic monitoring
 - User behavior analysis
 - Performance tracking
 
-## 📧 Marketing Automation
+### 📧 Marketing Automation
 - OmniSend integration
 - Audience management
 - Email marketing workflows
@@ -284,19 +283,19 @@ The walkthrough demonstrates the complete end-to-end workflow of the platform fr
 
 # 🛠️ Technologies Used
 
-## Frontend Technologies
+### Frontend Technologies
 - HTML5
 - CSS3
 - JavaScript
 
-## Backend Technologies
+### Backend Technologies
 - PHP
 - MySQL
 
-## CMS Platform
+### CMS Platform
 - WordPress
 
-## Third-Party Integrations
+### Third-Party Integrations
 - Razorpay Payment Gateway
 - OmniSend Email Automation
 - Google Analytics
@@ -305,7 +304,7 @@ The walkthrough demonstrates the complete end-to-end workflow of the platform fr
 
 # 📂 Major Modules
 
-# 🌐 Customer Side Modules
+## 🌐 Customer Side Modules
 - Homepage
 - Product Listings
 - Product Details
@@ -319,7 +318,7 @@ The walkthrough demonstrates the complete end-to-end workflow of the platform fr
 
 ---
 
-# 🛠️ Admin Side Modules
+## 🛠️ Admin Side Modules
 - Admin Authentication
 - Product Management
 - Content Management
@@ -379,13 +378,15 @@ The platform was developed primarily using WordPress, PHP, MySQL, and third-part
 
 # 🔗 Additional Links
 
-## 👨‍💻 LinkedIn Profile
+### 👨‍💻 LinkedIn Profile
 https://www.linkedin.com/in/aditya-pagariya
 
-## 💻 GitHub Profile
+### 💻 GitHub Profile
 https://github.com/adityapagariya19
 
 ---
+
+<div align="center">
 
 # 👨‍💻 Developer
 
@@ -393,4 +394,4 @@ https://github.com/adityapagariya19
 
 Passionate Full-Stack Developer focused on building scalable, user-centric, and real-world digital solutions combining frontend development, backend systems, e-commerce workflows, analytics integrations, and modern UI/UX experiences.
 
----
+</div>
