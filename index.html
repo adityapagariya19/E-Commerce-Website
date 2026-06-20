@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta name="google-site-verification" content="gwB7RF_zFSPooBeeoBv3z_kv5Ht9D_DgqHORqL20Dog" />
+<meta charset="UTF-8">
+<title>RAGE PEAK — One Tap. Fifteen Levels. Zero Mercy.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="description" content="A one-button extreme precision climbing game. Tap to jump. Don't touch the spikes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RAGE PEAK — design tokens
+   Display face: Unbounded  (title, attempt counter, big stats)
+   UI face:      Inter      (labels, buttons, body copy)
+   Palette:
+     --void      #15121a   base chrome / background
+     --ink       #0d0b10   deepest shadow
+     --bone      #f3eee7   primary text on dark
+     --t1 mist   #4a6fa5   Tier 1 — Ascent
+     --t2 gold   #d99a3d   Tier 2 — Switchbacks
+     --t3 ash    #5b5468   Tier 3 — Stormline
+     --t4 rust   #b8492f   Tier 4 — Fireline
+     --t5 rage   #e0392f   Tier 5 — Rage Summit (also global brand accent)
+   ============================================================ */
+:root{
+  --void:#15121a; --ink:#0d0b10; --bone:#f3eee7;
+  --t1:#4a6fa5; --t2:#d99a3d; --t3:#8b7fa0; --t4:#c4583a; --t5:#e0392f;
+  --accent:#e0392f;
+  --glass: rgba(243,238,231,0.06);
+  --glass-border: rgba(243,238,231,0.12);
+}
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{
+  margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+  background:var(--ink); color:var(--bone);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  touch-action:none; -webkit-user-select:none; user-select:none;
+}
+.display{ font-family:'Unbounded',system-ui,sans-serif; }
+
+#app{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
+#stage{
+  position:relative; width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(120% 120% at 50% 0%, #1d1822 0%, var(--ink) 65%);
+}
+#gameCanvas{
+  background:#000; display:block;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,0.7);
+  max-width:100%; max-height:100%;
+}
+
+/* ---------- HUD ---------- */
+#hud{ position:absolute; inset:0; pointer-events:none; display:none; }
+#hud.active{ display:block; }
+.hud-chip{
+  position:absolute; pointer-events:auto;
+  background:var(--glass); border:1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  border-radius:14px;
+}
+#hudLevelInfo{
+  top:18px; left:18px; padding:9px 16px 10px;
+  display:flex; flex-direction:column; gap:2px;
+}
+#hudLevelName{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:rgba(243,238,231,0.55); font-weight:600; }
+#hudAttempts{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:22px; line-height:1; color:var(--bone); }
+#hudAttempts span{ color:var(--accent); }
+
+#hudTop{
+  position:absolute; top:18px; left:50%; transform:translateX(-50%);
+  width:min(46%,360px); pointer-events:auto;
+}
+#progressTrack{
+  height:8px; border-radius:6px; background:rgba(243,238,231,0.12);
+  overflow:hidden; border:1px solid rgba(243,238,231,0.1);
+}
+#progressFill{
+  height:100%; width:0%; border-radius:6px;
+  background:linear-gradient(90deg, var(--accent), #ff8a65);
+  transition: width .08s linear;
+}
+
+#hudRight{
+  top:18px; right:18px; display:flex; gap:8px; padding:6px; pointer-events:auto;
+}
+.iconBtn{
+  width:38px; height:38px; border-radius:10px; border:none;
+  background:rgba(243,238,231,0.08); color:var(--bone);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:16px; transition: background .15s, transform .1s;
+}
+.iconBtn:hover{ background:rgba(243,238,231,0.16); }
+.iconBtn:active{ transform:scale(0.92); }
+
+#tip{
+  position:absolute; bottom:14%; left:50%; transform:translate(-50%,8px);
+  padding:9px 18px; border-radius:999px;
+  background:rgba(13,11,16,0.78); border:1px solid var(--glass-border);
+  font-size:13px; font-weight:600; letter-spacing:.02em;
+  opacity:0; transition:opacity .35s, transform .35s; pointer-events:none;
+  white-space:nowrap;
+}
+#tip.show{ opacity:1; transform:translate(-50%,0); }
+
+/* ---------- Overlays / screens ---------- */
+.screen{
+  position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+  background: radial-gradient(140% 100% at 50% 0%, rgba(40,30,40,0.55), rgba(10,8,12,0.92));
+  backdrop-filter: blur(6px);
+  z-index:20; pointer-events:auto;
+}
+.screen.active{ display:flex; }
+.panel{
+  width:min(92vw, 480px); max-height:88vh; overflow-y:auto;
+  background:linear-gradient(160deg, rgba(30,25,34,0.92), rgba(18,15,21,0.95));
+  border:1px solid var(--glass-border); border-top:3px solid var(--accent);
+  border-radius:22px; padding:30px 28px 26px;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.8);
+  text-align:center;
+}
+.panel.wide{ width:min(94vw, 620px); }
+.eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:rgba(243,238,231,0.5); font-weight:700; margin-bottom:6px; }
+.bigTitle{ font-size:38px; line-height:1.02; font-weight:900; margin:0 0 6px; letter-spacing:-.01em; }
+.bigTitle .accent{ color:var(--accent); }
+.tagline{ font-size:14.5px; color:rgba(243,238,231,0.65); margin:0 0 22px; line-height:1.5; }
+
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:15px 18px; margin:8px 0; border:none; border-radius:14px;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:15px; letter-spacing:.01em;
+  cursor:pointer; transition: transform .12s, filter .15s; color:var(--bone);
+  background:rgba(243,238,231,0.07); border:1px solid var(--glass-border);
+}
+.btn:hover{ filter:brightness(1.12); }
+.btn:active{ transform:scale(0.97); }
+.btn-primary{
+  background:linear-gradient(135deg, var(--accent), #ff7a4d); color:#1a0d08;
+  box-shadow: 0 14px 30px -10px rgba(224,57,47,0.55);
+}
+.btn-ghost{ background:transparent; border:1px solid var(--glass-border); }
+.btn-row{ display:flex; gap:10px; }
+.btn-row .btn{ flex:1; }
+
+.statLine{ display:flex; justify-content:space-between; font-size:12.5px; color:rgba(243,238,231,0.55); padding:7px 2px; border-bottom:1px solid rgba(243,238,231,0.08); }
+.statLine b{ color:var(--bone); font-weight:700; }
+
+/* level select grid */
+#levelGrid{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:9px; margin:18px 0 6px;
+}
+.lvlCard{
+  position:relative; aspect-ratio:1; border-radius:12px; border:1px solid var(--glass-border);
+  background:rgba(243,238,231,0.05); display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; transition: transform .12s, filter .15s;
+}
+.lvlCard:hover{ filter:brightness(1.2); }
+.lvlCard:active{ transform:scale(0.94); }
+.lvlCard .num{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:16px; }
+.lvlCard .rank{ font-size:9px; font-weight:800; margin-top:1px; letter-spacing:.05em; }
+.lvlCard.locked{ opacity:.32; cursor:not-allowed; }
+.lvlCard.locked:hover{ filter:none; }
+.lvlCard.locked .num::after{ content:"🔒"; font-size:10px; display:block; }
+.tierStrip{ display:flex; justify-content:space-between; font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:rgba(243,238,231,0.4); margin:14px 2px 2px; font-weight:700; }
+
+.dailyCard{
+  margin-top:16px; padding:14px 16px; border-radius:14px;
+  background:linear-gradient(135deg, rgba(224,57,47,0.18), rgba(224,57,47,0.04));
+  border:1px solid rgba(224,57,47,0.35); display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; transition: filter .15s;
+}
+.dailyCard:hover{ filter:brightness(1.1); }
+.dailyCard .dLabel{ font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:rgba(243,238,231,0.6); font-weight:700; }
+.dailyCard .dTitle{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:15px; margin-top:2px; }
+.dailyCard .dArrow{ font-size:20px; color:var(--accent); }
+
+.rankBadge{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:64px; height:64px; border-radius:50%; font-family:'Unbounded',sans-serif;
+  font-weight:900; font-size:26px; margin:8px auto 14px;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 60%), var(--accent);
+  box-shadow: 0 0 0 6px rgba(224,57,47,0.15);
+}
+
+#topBar{
+  position:absolute; top:16px; left:16px; right:16px; display:flex; justify-content:space-between; z-index:5; pointer-events:none;
+}
+.smallMute{ pointer-events:auto; }
+
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-thumb{ background:rgba(243,238,231,0.18); border-radius:6px; }
+
+@media (max-width:480px){
+  .bigTitle{ font-size:30px; }
+  #levelGrid{ grid-template-columns:repeat(5,1fr); gap:7px; }
+  .panel{ padding:24px 18px 20px; }
+}
+.flash{
+  position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:30;
+}
+.visually-hidden{ position:absolute; width:1px;height:1px; overflow:hidden; opacity:0; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="gameCanvas" width="960" height="540" aria-label="Rage Peak game canvas"></canvas>
+
+    <!-- death flash -->
+    <div class="flash" id="flash"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-chip" id="hudLevelInfo">
+        <div id="hudLevelName">LEVEL 1 · ASCENT</div>
+        <div id="hudAttempts">ATTEMPT <span id="hudAttemptNum">1</span></div>
+      </div>
+      <div class="hud-chip" id="hudTop">
+        <div id="progressTrack"><div id="progressFill"></div></div>
+      </div>
+      <div class="hud-chip" id="hudRight">
+        <button class="iconBtn" id="btnMuteHud" title="Mute">🔊</button>
+        <button class="iconBtn" id="btnPause" title="Pause">❙❙</button>
+      </div>
+      <div id="tip"></div>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div class="screen active" id="screenMenu">
+      <div class="panel">
+        <div class="eyebrow">One Button · Fifteen Levels</div>
+        <h1 class="bigTitle display">RAGE<br><span class="accent">PEAK</span></h1>
+        <p class="tagline">Tap, click, or hit space to jump. Don't touch the spikes.<br>Falling doesn't cost you anything except your pride.</p>
+        <button class="btn btn-primary" id="btnPlay">▶ &nbsp;CONTINUE CLIMB</button>
+        <button class="btn btn-ghost" id="btnLevels">SELECT LEVEL</button>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btnDailyMenu">🔥 DAILY CHALLENGE</button>
+        </div>
+        <div style="margin-top:18px;">
+          <div class="statLine"><span>Total attempts (all-time)</span><b id="statTotalAttempts">0</b></div>
+          <div class="statLine"><span>Levels conquered</span><b id="statLevelsDone">0 / 15</b></div>
+          <div class="statLine" style="border-bottom:none;"><span>Sound</span><b id="statSoundLabel" style="cursor:pointer;">ON</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL SELECT -->
+    <div class="screen" id="screenLevels">
+      <div class="panel wide">
+        <div class="eyebrow">Choose Your Suffering</div>
+        <h2 class="bigTitle display" style="font-size:26px;">LEVEL SELECT</h2>
+        <div id="levelGrid"></div>
+        <div class="dailyCard" id="btnDailyCard">
+          <div>
+            <div class="dLabel">Today's Climb</div>
+            <div class="dTitle" id="dailyDateLabel">Daily Challenge</div>
+          </div>
+          <div class="dArrow">→</div>
+        </div>
+        <button class="btn btn-ghost" id="btnBackFromLevels" style="margin-top:16px;">← BACK</button>
+      </div>
+    </div>
+
+    <!-- PAUSE -->
+    <div class="screen" id="screenPause">
+      <div class="panel">
+        <div class="eyebrow">Paused</div>
+        <h2 class="bigTitle display" style="font-size:28px;">CATCH YOUR BREATH</h2>
+        <button class="btn btn-primary" id="btnResume">▶ RESUME</button>
+        <button class="btn btn-ghost" id="btnRestartLevel">↺ RESTART LEVEL</button>
+        <button class="btn btn-ghost" id="btnToggleSoundPause">🔊 SOUND: ON</button>
+        <button class="btn btn-ghost" id="btnExitToMenu">← LEVEL SELECT</button>
+      </div>
+    </div>
+
+    <!-- LEVEL COMPLETE -->
+    <div class="screen" id="screenComplete">
+      <div class="panel">
+        <div class="eyebrow" id="completeEyebrow">Summit Reached</div>
+        <div class="rankBadge" id="rankBadge">S</div>
+        <h2 class="bigTitle display" style="font-size:26px;" id="completeTitle">LEVEL CLEARED</h2>
+        <div class="statLine"><span>Attempts this run</span><b id="completeAttempts">1</b></div>
+        <div class="statLine"><span>Clean time</span><b id="completeTime">0.0s</b></div>
+        <div class="statLine" style="border-bottom:none;"><span>Personal best</span><b id="completeBest">—</b></div>
+        <button class="btn btn-primary" id="btnNextLevel" style="margin-top:18px;">NEXT LEVEL →</button>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btnShare">📤 SHARE</button>
+          <button class="btn btn-ghost" id="btnRetryFromComplete">↺ RETRY</button>
+        </div>
+        <button class="btn btn-ghost" id="btnLevelsFromComplete">LEVEL SELECT</button>
+      </div>
+    </div>
+  </div>
+</div>
+<canvas id="shareCanvas" width="1080" height="1080" class="visually-hidden"></canvas>
+<script>
+"use strict";
+/* ================================================================
+   RAGE PEAK — game engine
+   A one-button precision auto-runner. Player moves forward at a
+   constant speed; the only input is JUMP. Built as a single
+   dependency-free file so it can be hosted anywhere static.
+   ================================================================ */
+
+// ---------------------------------------------------------------
+// CONFIG — tune these to rebalance the whole game
+// ---------------------------------------------------------------
+const CFG = {
+  W: 960, H: 540,
+  GROUND_Y: 400,
+  PLAYER_R: 14,
+  GRAVITY: 1900,
+  GRAVITY_RAGE: 2000,
+  JUMP_VY: 620,
+  AIR_JUMP_VY: 560,
+  COYOTE_MS: 90,        // grace period after leaving ground where jump still registers
+  BUFFER_MS: 130,       // a jump pressed slightly early still fires on landing
+  CRUMBLE_DELAY_MS: 320,
+  STEP_MS: 1000 / 120,  // fixed physics step (ms) — decoupled from render framerate
+  MAX_STEPS: 8,
+  CAM_LEAD_X: 330,
+  CAM_LERP: 0.085,
+};
+
+const TIERS = [
+  { id: 1, name: "ASCENT",        speed: 230, gravity: CFG.GRAVITY,      sky: ["#2b3a55", "#5c7aa8"], fog: "#9fb6d6" },
+  { id: 2, name: "SWITCHBACKS",   speed: 255, gravity: CFG.GRAVITY,      sky: ["#4a3420", "#caa257"], fog: "#e9c98a" },
+  { id: 3, name: "STORMLINE",     speed: 280, gravity: CFG.GRAVITY,      sky: ["#241f2c", "#6c5f80"], fog: "#a89bc2" },
+  { id: 4, name: "FIRELINE",      speed: 305, gravity: CFG.GRAVITY,      sky: ["#2a1410", "#9a3f2a"], fog: "#e08a5f" },
+  { id: 5, name: "RAGE SUMMIT",   speed: 335, gravity: CFG.GRAVITY_RAGE, sky: ["#1a0a0c", "#7a1f1a"], fog: "#ff6b52" },
+];
+
+// ---------------------------------------------------------------
+// small utilities
+// ---------------------------------------------------------------
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// deterministic PRNG so the Daily Challenge is identical for every
+// player on a given calendar day
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashString(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = (Math.imul(31, h) + s.charCodeAt(i)) | 0; }
+  return h;
+}
+
+// circle vs axis-aligned rect — returns true on any overlap
+function circleRectOverlap(cx, cy, cr, rx, ry, rw, rh) {
+  const nx = clamp(cx, rx, rx + rw);
+  const ny = clamp(cy, ry, ry + rh);
+  const dx = cx - nx, dy = cy - ny;
+  return (dx * dx + dy * dy) < (cr * cr);
+}
+
+// ---------------------------------------------------------------
+// LEVEL BUILDER — a tiny DSL for authoring levels with a running
+// cursor, so every coordinate is computed rather than guessed.
+// ---------------------------------------------------------------
+class LevelBuilder {
+  constructor(startY) {
+    this.x = 0;
+    this.y = startY;
+    this.platforms = [];
+    this.movers = [];
+    this.spikes = [];
+    this.maxY = startY;
+    this.tips = [];
+  }
+  _track(y) { if (y > this.maxY) this.maxY = y; }
+
+  ground(len, opts = {}) {
+    this.platforms.push({ x: this.x, y: this.y, w: len, h: 30, crumble: !!opts.crumble });
+    if (opts.spikes) {
+      for (const [offset, w] of opts.spikes) {
+        this.spikes.push({ x: this.x + offset, y: this.y - 24, w, h: 24 });
+      }
+    }
+    this.x += len;
+    this._track(this.y);
+    return this;
+  }
+  gap(len) { this.x += len; return this; }
+  step(len, dy, opts = {}) { this.y += dy; return this.ground(len, opts); }
+  mover(len, dy, amp, period, axis = "y", phase = 0) {
+    const baseY = this.y + dy;
+    this.movers.push({ x: this.x, y: baseY, w: len, h: 28, baseX: this.x, baseY, amp, period, axis, phase });
+    this._track(baseY + amp);
+    this.y = baseY;
+    this.x += len;
+    return this;
+  }
+  tipAt(text) { this.tips.push({ x: this.x, text, shown: false }); return this; }
+  goal(pad = 170) {
+    return {
+      length: this.x + pad,
+      platforms: this.platforms,
+      movers: this.movers,
+      spikes: this.spikes,
+      tips: this.tips,
+      goal: { x: this.x + pad * 0.45, y: this.y - 46 },
+      deathY: this.maxY + 300,
+      startY: this.platforms[0].y,
+    };
+  }
+}
+
+// ---------------------------------------------------------------
+// LEVEL DATA — 15 hand-built levels across 5 tiers
+// ---------------------------------------------------------------
+function buildLevels() {
+  const GY = CFG.GROUND_Y;
+  const levels = [];
+
+  // ---------- TIER 1 — ASCENT (teaches the single jump) ----------
+  levels.push({ id: 1, tier: 1, name: "First Steps",
+    data: new LevelBuilder(GY)
+      .ground(280)
+      .tipAt("TAP TO JUMP")
+      .gap(110).ground(220)
+      .gap(125).ground(220)
+      .gap(95).ground(260)
+      .goal() });
+
+  levels.push({ id: 2, tier: 1, name: "Mind the Gap",
+    data: new LevelBuilder(GY)
+      .ground(240, { spikes: [[170, 34]] })
+      .gap(130).ground(230)
+      .gap(145).ground(190, { spikes: [[55, 30]] })
+      .gap(110).ground(260)
+      .goal() });
+
+  levels.push({ id: 3, tier: 1, name: "Double Trouble",
+    data: new LevelBuilder(GY)
+      .ground(230)
+      .gap(150).ground(150)
+      .tipAt("TAP AGAIN IN THE AIR FOR A 2ND JUMP")
+      .gap(245).ground(210, { spikes: [[50, 28], [135, 28]] })
+      .gap(120).ground(270)
+      .goal() });
+
+  // ---------- TIER 2 — SWITCHBACKS (raised steps, crumble intro) ----------
+  levels.push({ id: 4, tier: 2, name: "Switchback",
+    data: new LevelBuilder(GY)
+      .ground(220)
+      .gap(120).step(190, -55, { spikes: [[60, 28]] })
+      .gap(135).step(170, 55)
+      .gap(120).ground(230, { spikes: [[40, 26], [150, 26]] })
+      .gap(110).ground(240)
+      .goal() });
+
+  levels.push({ id: 5, tier: 2, name: "Sand Beneath You",
+    data: new LevelBuilder(GY)
+      .ground(210)
+      .gap(120).ground(160, { crumble: true })
+      .tipAt("CRUMBLES AFTER YOU LAND — KEEP MOVING")
+      .gap(70).ground(180, { spikes: [[120, 28]] })
+      .gap(140).ground(170, { crumble: true })
+      .gap(75).ground(250)
+      .goal() });
+
+  levels.push({ id: 6, tier: 2, name: "Review Ridge",
+    data: new LevelBuilder(GY)
+      .ground(200, { spikes: [[140, 28]] })
+      .gap(140).step(170, -50)
+      .gap(150).ground(140, { crumble: true })
+      .gap(80).step(190, 50, { spikes: [[70, 28]] })
+      .gap(130).ground(150, { crumble: true })
+      .gap(70).ground(260)
+      .goal() });
+
+  // ---------- TIER 3 — STORMLINE (moving platforms) ----------
+  levels.push({ id: 7, tier: 3, name: "Updraft",
+    data: new LevelBuilder(GY)
+      .ground(220)
+      .gap(60).mover(150, -30, 55, 1.7, "y")
+      .tipAt("TIME YOUR JUMP WITH THE PLATFORM")
+      .gap(70).ground(210, { spikes: [[80, 28]] })
+      .gap(130).mover(140, -10, 45, 1.5, "y", 1.0)
+      .gap(70).ground(250)
+      .goal() });
+
+  levels.push({ id: 8, tier: 3, name: "Crosswind",
+    data: new LevelBuilder(GY)
+      .ground(200, { spikes: [[140, 26]] })
+      .gap(60).mover(150, -20, 95, 2.1, "x")
+      .gap(60).ground(190, { spikes: [[30, 26], [130, 26]] })
+      .gap(140).mover(150, -10, 80, 1.9, "x", 0.9)
+      .gap(60).ground(240)
+      .goal() });
+
+  levels.push({ id: 9, tier: 3, name: "Collapse Chain",
+    data: new LevelBuilder(GY)
+      .ground(190)
+      .gap(110).ground(130, { crumble: true })
+      .gap(220) // wide — needs the double jump
+      .tipAt("THIS GAP NEEDS THE DOUBLE JUMP")
+      .ground(130, { crumble: true })
+      .gap(80).mover(140, -25, 60, 1.6, "y")
+      .gap(70).ground(140, { spikes: [[40, 26]] })
+      .gap(120).ground(250)
+      .goal() });
+
+  levels.push({ id: 10, tier: 3, name: "Stormline Finale",
+    data: new LevelBuilder(GY)
+      .ground(190, { spikes: [[130, 26]] })
+      .gap(90).mover(130, -35, 70, 1.8, "y")
+      .gap(100).ground(120, { crumble: true })
+      .gap(190)
+      .mover(150, -15, 90, 2.0, "x")
+      .gap(60).ground(160, { spikes: [[30, 26], [110, 26]] })
+      .gap(120).ground(130, { crumble: true })
+      .gap(80).ground(260)
+      .goal() });
+
+  // ---------- TIER 4 — FIRELINE (narrow platforms, fast, dense) ----------
+  levels.push({ id: 11, tier: 4, name: "Narrow Margins",
+    data: new LevelBuilder(GY)
+      .ground(170)
+      .gap(140).ground(95, { spikes: [[33, 24]] })
+      .gap(150).ground(85)
+      .gap(155).ground(90, { spikes: [[30, 24]] })
+      .gap(150).ground(80)
+      .gap(140).ground(220)
+      .goal() });
+
+  levels.push({ id: 12, tier: 4, name: "Double Mover Gauntlet",
+    data: new LevelBuilder(GY)
+      .ground(160)
+      .gap(70).mover(110, -25, 70, 1.4, "x")
+      .gap(60).mover(110, -10, 65, 1.4, "y", 0.8)
+      .gap(70).ground(100, { crumble: true, spikes: [[35, 22]] })
+      .gap(150) // needs double jump off a crumbling, spiked platform — true endgame test
+      .mover(120, -20, 80, 1.5, "x", 1.4)
+      .gap(70).ground(90, { crumble: true })
+      .gap(150).ground(230)
+      .goal() });
+
+  levels.push({ id: 13, tier: 4, name: "Fireline Finale",
+    data: new LevelBuilder(GY)
+      .ground(150, { spikes: [[100, 22]] })
+      .gap(150).ground(90)
+      .gap(60).mover(100, -30, 75, 1.5, "y")
+      .gap(150).ground(85, { crumble: true, spikes: [[28, 22]] })
+      .gap(165)
+      .mover(110, -15, 85, 1.6, "x")
+      .gap(60).ground(90, { crumble: true })
+      .gap(160).ground(95, { spikes: [[30, 22]] })
+      .gap(140).ground(240)
+      .goal() });
+
+  // ---------- TIER 5 — RAGE SUMMIT (the finale gauntlet) ----------
+  levels.push({ id: 14, tier: 5, name: "No Room For Error",
+    data: new LevelBuilder(GY)
+      .ground(150)
+      .gap(150).mover(95, -25, 80, 1.3, "x")
+      .gap(60).ground(80, { spikes: [[26, 20]] })
+      .gap(150).ground(80, { crumble: true })
+      .gap(155).mover(100, -15, 80, 1.4, "y", 0.6)
+      .gap(70).ground(75, { crumble: true, spikes: [[24, 20]] })
+      .gap(160).ground(85)
+      .gap(150).ground(230)
+      .goal() });
+
+  levels.push({ id: 15, tier: 5, name: "The Rage Peak",
+    data: new LevelBuilder(GY)
+      .ground(150, { spikes: [[100, 20]] })
+      .gap(155).ground(85)
+      .gap(65).mover(95, -30, 85, 1.3, "x")
+      .gap(155) // double jump over a moving platform's dead zone
+      .ground(80, { crumble: true, spikes: [[24, 20]] })
+      .gap(160).mover(100, -20, 85, 1.35, "y", 1.1)
+      .gap(70).ground(75, { crumble: true })
+      .gap(155).mover(110, -10, 90, 1.45, "x", 0.5)
+      .gap(65).ground(80, { spikes: [[20, 50]] })
+      .gap(150).ground(300)
+      .goal() });
+
+  // resolve the `data` into a flat usable level object per entry
+  return levels.map((lvl) => {
+    const tier = TIERS[lvl.tier - 1];
+    return Object.assign({}, lvl.data, {
+      id: lvl.id, tier: lvl.tier, name: lvl.name,
+      speed: tier.speed, gravity: tier.gravity,
+      sky: tier.sky, fog: tier.fog, tierName: tier.name,
+    });
+  });
+}
+
+// ---------------------------------------------------------------
+// DAILY CHALLENGE — deterministic per calendar day
+// ---------------------------------------------------------------
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function buildDailyLevel(dateKey) {
+  const rng = mulberry32(hashString("ragepeak-" + dateKey));
+  const tier = TIERS[3]; // Daily sits at "Fireline" intensity — hard, but not the absolute finale
+  const b = new LevelBuilder(CFG.GROUND_Y);
+  const segments = 11 + Math.floor(rng() * 3);
+  for (let i = 0; i < segments; i++) {
+    const r = rng();
+    const len = 90 + Math.floor(rng() * 110);
+    // Kept comfortably under the single-jump max range for this tier's
+    // speed/gravity (~199px) even after the worst-case height change
+    // below, so every generated layout is solvable without relying on
+    // a double-jump bailout — important since this runs unattended
+    // for any future date.
+    const gapLen = 90 + Math.floor(rng() * 80);
+    if (i > 0) b.gap(gapLen);
+    if (r < 0.18) {
+      const amp = 40 + rng() * 30;
+      const period = 1.3 + rng() * 0.6;
+      b.mover(Math.max(len, 90), (rng() - 0.5) * 50, amp, period, rng() < 0.5 ? "x" : "y", rng() * 2);
+    } else {
+      const opts = {};
+      if (rng() < 0.3) opts.crumble = true;
+      if (rng() < 0.45) opts.spikes = [[Math.floor(len * 0.3), 22]];
+      b.step(len, (rng() - 0.5) * 50, opts);
+    }
+  }
+  const lvl = b.goal();
+  return Object.assign({}, lvl, {
+    id: "daily-" + dateKey, tier: 4, name: "Daily Challenge",
+    speed: tier.speed, gravity: tier.gravity, sky: tier.sky, fog: tier.fog, tierName: "DAILY",
+  });
+}
+// ---------------------------------------------------------------
+// STORAGE — guarded localStorage with an in-memory fallback so
+// the game still runs in private/restricted browser contexts
+// ---------------------------------------------------------------
+const Storage = (function () {
+  const KEY = "ragepeak_save_v1";
+  let memory = null;
+  function defaults() {
+    return { unlockedLevel: 1, levels: {}, daily: { date: "", attempts: 0, completed: false, bestAttempts: 0 }, muted: false, totalAttempts: 0 };
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) return Object.assign(defaults(), JSON.parse(raw));
+    } catch (e) { /* ignore */ }
+    return memory || defaults();
+  }
+  function save(state) {
+    memory = state;
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+  return { load, save };
+})();
+
+// ---------------------------------------------------------------
+// AUDIO — tiny procedural SFX synth (no external audio files)
+// ---------------------------------------------------------------
+const Sfx = (function () {
+  let ctx = null;
+  let muted = false;
+  function ensure() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) ctx = new AC();
+    }
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function tone(freq, dur, type, gainPeak, sweepTo) {
+    if (muted) return;
+    const c = ensure(); if (!c) return;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(freq, c.currentTime);
+    if (sweepTo) osc.frequency.exponentialRampToValueAtTime(sweepTo, c.currentTime + dur);
+    gain.gain.setValueAtTime(0, c.currentTime);
+    gain.gain.linearRampToValueAtTime(gainPeak || 0.18, c.currentTime + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+    osc.connect(gain); gain.connect(c.destination);
+    osc.start(); osc.stop(c.currentTime + dur + 0.02);
+  }
+  function noise(dur, gainPeak) {
+    if (muted) return;
+    const c = ensure(); if (!c) return;
+    const bufSize = Math.floor(c.sampleRate * dur);
+    const buf = c.createBuffer(1, bufSize, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufSize);
+    const src = c.createBufferSource(); src.buffer = buf;
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(gainPeak || 0.25, c.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+    src.connect(gain); gain.connect(c.destination);
+    src.start();
+  }
+  return {
+    setMuted(v) { muted = v; },
+    jump() { tone(520, 0.12, "sine", 0.16, 760); },
+    airJump() { tone(640, 0.1, "triangle", 0.14, 880); },
+    land() { tone(180, 0.07, "sine", 0.10, 120); },
+    death() { tone(220, 0.32, "sawtooth", 0.18, 60); noise(0.22, 0.12); },
+    crumble() { tone(340, 0.08, "square", 0.07, 220); },
+    complete() {
+      tone(523, 0.14, "sine", 0.16, 523); 
+      setTimeout(() => tone(659, 0.14, "sine", 0.16, 659), 90);
+      setTimeout(() => tone(784, 0.22, "sine", 0.18, 784), 180);
+    },
+    click() { tone(700, 0.04, "square", 0.06); },
+  };
+})();
+
+// ---------------------------------------------------------------
+// PARTICLES — small pooled system: trail dust, landing puffs,
+// death bursts, and a finale confetti pop
+// ---------------------------------------------------------------
+class Particles {
+  constructor() { this.list = []; }
+  spawn(x, y, opts) {
+    this.list.push(Object.assign({
+      x, y, vx: 0, vy: 0, life: 0.5, age: 0, r: 3, color: "#fff", grav: 0,
+    }, opts));
+  }
+  trail(x, y, color) {
+    this.spawn(x, y, { vx: (Math.random() - 0.5) * 20, vy: (Math.random() - 0.5) * 20, life: 0.35, r: 2 + Math.random() * 2, color, grav: 40 });
+  }
+  landingDust(x, y) {
+    for (let i = 0; i < 7; i++) {
+      const a = Math.PI + Math.random() * Math.PI;
+      const sp = 60 + Math.random() * 70;
+      this.spawn(x, y, { vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * 0.5, life: 0.4 + Math.random() * 0.2, r: 2 + Math.random() * 2.5, color: "#f3eee7", grav: 220 });
+    }
+  }
+  burst(x, y, color, n = 22) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = 90 + Math.random() * 220;
+      this.spawn(x, y, { vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0.5 + Math.random() * 0.5, r: 2.5 + Math.random() * 3.5, color, grav: 380 });
+    }
+  }
+  confetti(x, y) {
+    const colors = ["#e0392f", "#ff8a65", "#f3eee7", "#d99a3d", "#7ad6c0"];
+    for (let i = 0; i < 50; i++) {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.9;
+      const sp = 160 + Math.random() * 260;
+      this.spawn(x, y, { vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0.9 + Math.random() * 0.6, r: 3 + Math.random() * 3, color: colors[i % colors.length], grav: 420, spin: Math.random() * 10 });
+    }
+  }
+  update(dt) {
+    for (let i = this.list.length - 1; i >= 0; i--) {
+      const p = this.list[i];
+      p.age += dt;
+      if (p.age >= p.life) { this.list.splice(i, 1); continue; }
+      p.vy += (p.grav || 0) * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+    }
+  }
+  draw(ctx, camX, camY) {
+    for (const p of this.list) {
+      const t = 1 - p.age / p.life;
+      ctx.globalAlpha = clamp(t, 0, 1);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x - camX, p.y - camY, p.r * t, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ---------------------------------------------------------------
+// PLAYER + PHYSICS — fixed-timestep simulation so behaviour is
+// identical regardless of display refresh rate, and thin spikes
+// can't be tunnelled through at high speed.
+// ---------------------------------------------------------------
+class Runner {
+  constructor() { this.reset(0, CFG.GROUND_Y, 230); }
+  reset(x, y, speed) {
+    this.x = x; this.y = y - CFG.PLAYER_R;
+    this.vx = speed; this.vy = 0;
+    this.grounded = true;
+    this.airJumpsUsed = 0;
+    this.timeSinceGrounded = 0;
+    this.jumpBufferMs = -9999;
+    this.squash = 1; this.squashVel = 0;
+    this.dead = false;
+    this.distance = 0;
+  }
+  requestJump() { this.jumpBufferMs = 0; }
+  trySpendJump() {
+    const canGround = this.grounded || this.timeSinceGrounded <= CFG.COYOTE_MS;
+    if (canGround) {
+      this.vy = -CFG.JUMP_VY;
+      this.grounded = false;
+      this.timeSinceGrounded = 9999;
+      this.airJumpsUsed = 0;
+      this.jumpBufferMs = -9999;
+      this.squashVel = 7;
+      return "ground";
+    }
+    if (this.airJumpsUsed < 1) {
+      this.vy = -CFG.AIR_JUMP_VY;
+      this.airJumpsUsed = 1;
+      this.jumpBufferMs = -9999;
+      this.squashVel = 7;
+      return "air";
+    }
+    return null;
+  }
+}
+
+// resolves one fixed physics step against the level's runtime
+// (mutable) obstacle state. Returns an event string or null.
+function stepPhysics(runner, level, runtime, dtSec, levelTimeSec) {
+  let event = null;
+
+  // jump buffer countdown / consumption
+  if (runner.jumpBufferMs > -9000) {
+    runner.jumpBufferMs += dtSec * 1000;
+    const got = runner.trySpendJump();
+    if (got) event = got === "ground" ? "jump" : "airjump";
+    else if (runner.jumpBufferMs > CFG.BUFFER_MS) runner.jumpBufferMs = -9999;
+  }
+
+  runner.timeSinceGrounded += dtSec * 1000;
+  runner.vy += level.gravity * dtSec;
+  runner.x += runner.vx * dtSec;
+  runner.y += runner.vy * dtSec;
+  runner.distance = runner.x;
+
+  // squash/stretch spring relaxation
+  runner.squashVel += (1 - runner.squash) * 40 * dtSec;
+  runner.squash += runner.squashVel * dtSec;
+  runner.squashVel *= 0.82;
+
+  const wasGrounded = runner.grounded;
+  runner.grounded = false;
+
+  // --- collide with moving platforms first (recomputed live) ---
+  for (const m of runtime.movers) {
+    const phase = (levelTimeSec / m.period + m.phase) * Math.PI * 2;
+    const off = Math.sin(phase) * m.amp;
+    m.curX = m.axis === "x" ? m.baseX + off : m.baseX;
+    m.curY = m.axis === "y" ? m.baseY + off : m.baseY;
+    const landing = handlePlatformCollision(runner, m.curX, m.curY, m.w, m.h, dtSec, m);
+    if (landing === "land") { runner.grounded = true; runner.timeSinceGrounded = 0; event = event || "land"; }
+    else if (landing === "hit") { event = "death"; }
+  }
+
+  // --- static / crumble platforms ---
+  for (const p of runtime.platforms) {
+    if (p.gone) continue;
+    const landing = handlePlatformCollision(runner, p.x, p.y, p.w, p.h, dtSec, p);
+    if (landing === "land") {
+      runner.grounded = true; runner.timeSinceGrounded = 0; event = event || "land";
+      if (p.crumble && !p.crumbling) { p.crumbling = true; p.crumbleT = 0; event = "crumbleStart"; }
+    } else if (landing === "hit") {
+      event = "death";
+    }
+  }
+
+  // crumble timers tick regardless of current contact
+  for (const p of runtime.platforms) {
+    if (p.crumbling && !p.gone) {
+      p.crumbleT += dtSec * 1000;
+      if (p.crumbleT >= CFG.CRUMBLE_DELAY_MS) p.gone = true;
+    }
+  }
+
+  // spikes — any overlap is instant death
+  for (const s of level.spikes) {
+    const insetX = s.w * 0.16, insetY = 3;
+    if (circleRectOverlap(runner.x, runner.y, CFG.PLAYER_R * 0.78, s.x + insetX, s.y + insetY, s.w - insetX * 2, s.h - insetY)) {
+      event = "death";
+    }
+  }
+
+  // fell into the abyss
+  if (runner.y - CFG.PLAYER_R > level.deathY) event = "death";
+
+  // reached the goal
+  if (!event && runner.x >= level.goal.x) event = "win";
+
+  if (wasGrounded && !runner.grounded) { /* left platform this frame, coyote timer already running */ }
+
+  return event;
+}
+
+// circle (runner) vs one axis-aligned rect. Lands only when falling
+// onto the top surface; any other overlap counts as a wall hit.
+function handlePlatformCollision(runner, rx, ry, rw, rh, dtSec) {
+  const r = CFG.PLAYER_R;
+  const cx = runner.x, cy = runner.y;
+  if (cx + r < rx || cx - r > rx + rw || cy + r < ry - 2 || cy - r > ry + rh) return null;
+
+  const prevY = cy - runner.vy * dtSec;
+  const fallingOntoTop = runner.vy >= 0 && (prevY + r) <= ry + 10 && (cy + r) >= ry;
+  if (fallingOntoTop && cx + r > rx + 2 && cx - r < rx + rw - 2) {
+    runner.y = ry - r;
+    runner.vy = 0;
+    return "land";
+  }
+  if (circleRectOverlap(cx, cy, r * 0.92, rx, ry, rw, rh)) return "hit";
+  return null;
+}
+
+function cloneRuntime(level) {
+  return {
+    platforms: level.platforms.map((p) => Object.assign({}, p, { gone: false, crumbling: false, crumbleT: 0 })),
+    movers: level.movers.map((m) => Object.assign({}, m, { curX: m.baseX, curY: m.baseY })),
+  };
+}
+// ---------------------------------------------------------------
+// RENDERER
+// ---------------------------------------------------------------
+const Camera = {
+  x: 0, y: 0, targetY: 0,
+  follow(runner) {
+    this.x = runner.x - CFG.CAM_LEAD_X;
+    this.targetY = clamp(runner.y - CFG.H * 0.5, -260, 260);
+    this.y = lerp(this.y, this.targetY, CFG.CAM_LERP);
+  },
+  reset(runner) { this.x = runner.x - CFG.CAM_LEAD_X; this.y = 0; this.targetY = 0; },
+};
+
+function hexMix(a, b, t) {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ar = (pa >> 16) & 255, ag = (pa >> 8) & 255, ab = pa & 255;
+  const br = (pb >> 16) & 255, bg = (pb >> 8) & 255, bb = pb & 255;
+  const r = Math.round(lerp(ar, br, t)), g = Math.round(lerp(ag, bg, t)), bl = Math.round(lerp(ab, bb, t));
+  return "rgb(" + r + "," + g + "," + bl + ")";
+}
+
+function drawBackground(ctx, level, camX, t) {
+  const [top, bot] = level.sky;
+  const grad = ctx.createLinearGradient(0, 0, 0, CFG.H);
+  grad.addColorStop(0, top); grad.addColorStop(1, bot);
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, CFG.W, CFG.H);
+
+  // three parallax mountain silhouette layers
+  drawMountainLayer(ctx, camX * 0.15, CFG.H * 0.62, 0.10, level.fog, 70);
+  drawMountainLayer(ctx, camX * 0.32, CFG.H * 0.72, 0.16, level.fog, 100);
+  drawMountainLayer(ctx, camX * 0.55, CFG.H * 0.84, 0.22, "rgba(13,11,16,0.55)", 130);
+
+  // soft vignette
+  const vg = ctx.createRadialGradient(CFG.W / 2, CFG.H / 2, CFG.H * 0.25, CFG.W / 2, CFG.H / 2, CFG.W * 0.7);
+  vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,0.38)");
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, CFG.W, CFG.H);
+}
+
+function drawMountainLayer(ctx, offset, baseY, alpha, color, peakH) {
+  ctx.save();
+  ctx.globalAlpha = alpha === 0.22 ? 1 : alpha + 0.55;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-200, CFG.H);
+  const span = 260;
+  const startI = Math.floor((offset - 300) / span) - 1;
+  for (let i = startI; i < startI + 8; i++) {
+    const px = i * span - offset;
+    const h = peakH * (0.5 + Math.abs(Math.sin(i * 12.9898)) * 0.6);
+    ctx.lineTo(px, baseY - h);
+    ctx.lineTo(px + span / 2, baseY - h * 0.4);
+  }
+  ctx.lineTo(CFG.W + 200, baseY);
+  ctx.lineTo(CFG.W + 200, CFG.H);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawPlatform(ctx, x, y, w, h, camX, camY, accent, ghosted, crumbling, crumbleT) {
+  const sx = x - camX, sy = y - camY;
+  let alpha = 1;
+  if (crumbling) alpha = clamp(1 - crumbleT / CFG.CRUMBLE_DELAY_MS, 0.15, 1);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = "#221c26";
+  ctx.fillRect(sx, sy, w, h);
+  ctx.fillStyle = crumbling ? "#7a4030" : accent;
+  ctx.fillRect(sx, sy, w, 5);
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.fillRect(sx, sy + 5, w, 2);
+  ctx.globalAlpha = 1;
+}
+
+function drawSpike(ctx, s, camX, camY) {
+  const sx = s.x - camX, sy = s.y - camY;
+  const teeth = Math.max(1, Math.round(s.w / 20));
+  const tw = s.w / teeth;
+  ctx.fillStyle = "#e0392f";
+  ctx.strokeStyle = "rgba(255,150,130,0.6)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < teeth; i++) {
+    const bx = sx + i * tw;
+    ctx.beginPath();
+    ctx.moveTo(bx, sy + s.h);
+    ctx.lineTo(bx + tw / 2, sy);
+    ctx.lineTo(bx + tw, sy + s.h);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+  }
+}
+
+function drawGoal(ctx, goal, camX, camY, t) {
+  const sx = goal.x - camX, sy = goal.y - camY;
+  const bob = Math.sin(t * 3) * 4;
+  ctx.save();
+  ctx.translate(sx, sy + bob);
+  ctx.strokeStyle = "#d8d2c8"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 90); ctx.stroke();
+  ctx.fillStyle = "#e0392f";
+  ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(46, 16); ctx.lineTo(0, 30); ctx.closePath(); ctx.fill();
+  ctx.shadowColor = "#e0392f"; ctx.shadowBlur = 22;
+  ctx.fillStyle = "rgba(224,57,47,0.5)";
+  ctx.beginPath(); ctx.arc(0, 95, 26, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+function drawPlayer(ctx, runner, camX, camY, accent) {
+  const sx = runner.x - camX, sy = runner.y - camY;
+  const sxScale = clamp(runner.squash, 0.6, 1.5);
+  const syScale = clamp(2 - runner.squash, 0.6, 1.5);
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.scale(sxScale, syScale);
+  ctx.shadowColor = accent; ctx.shadowBlur = 18;
+  const grad = ctx.createRadialGradient(-4, -5, 2, 0, 0, CFG.PLAYER_R + 2);
+  grad.addColorStop(0, "#fff7ee");
+  grad.addColorStop(0.55, accent);
+  grad.addColorStop(1, "#3a1410");
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(0, 0, CFG.PLAYER_R, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+// ---------------------------------------------------------------
+// SHARE CARD — composes a square PNG players can post/send.
+// Generated entirely client-side from a hidden canvas.
+// ---------------------------------------------------------------
+function renderShareCard(canvas, opts) {
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const tier = TIERS[(opts.tier || 1) - 1] || TIERS[0];
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, tier.sky[0]); grad.addColorStop(1, tier.sky[1]);
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < 3; i++) {
+    ctx.globalAlpha = 0.5 - i * 0.12;
+    ctx.fillStyle = "#0d0b10";
+    ctx.beginPath();
+    ctx.moveTo(0, H * (0.62 + i * 0.08));
+    for (let x = 0; x <= W; x += 90) {
+      ctx.lineTo(x, H * (0.62 + i * 0.08) - (60 + i * 30) * Math.abs(Math.sin(x * 0.01 + i)));
+    }
+    ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.font = "600 28px Inter, sans-serif";
+  ctx.fillText("RAGE PEAK", W / 2, 130);
+
+  ctx.fillStyle = "#f3eee7";
+  ctx.font = "900 64px Unbounded, sans-serif";
+  wrapText(ctx, opts.levelName.toUpperCase(), W / 2, 230, W - 140, 70);
+
+  ctx.fillStyle = "#e0392f";
+  ctx.font = "900 220px Unbounded, sans-serif";
+  ctx.fillText(String(opts.attempts), W / 2, H / 2 + 160);
+
+  ctx.fillStyle = "rgba(255,255,255,0.75)";
+  ctx.font = "700 36px Inter, sans-serif";
+  ctx.fillText(opts.won ? "ATTEMPTS TO CONQUER IT" : "ATTEMPTS AND COUNTING", W / 2, H / 2 + 230);
+
+  ctx.fillStyle = "rgba(255,255,255,0.45)";
+  ctx.font = "600 24px Inter, sans-serif";
+  ctx.fillText(opts.won ? "Think you can beat it in fewer?" : "Send help. Or don't.", W / 2, H - 90);
+}
+
+function wrapText(ctx, text, cx, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "", lines = [];
+  for (const w of words) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  const startY = y - ((lines.length - 1) * lineHeight) / 2;
+  lines.forEach((l, i) => ctx.fillText(l, cx, startY + i * lineHeight));
+}
+// ---------------------------------------------------------------
+// GAME — top-level state machine wiring DOM, canvas and physics
+// ---------------------------------------------------------------
+const Game = {
+  state: "menu", // menu | levels | playing | paused | complete
+  levels: [],
+  current: null,      // resolved level object currently loaded
+  runtime: null,       // mutable per-attempt obstacle state
+  runner: null,
+  particles: null,
+  attempts: 1,
+  attemptStartMs: 0,
+  levelTimeSec: 0,
+  save: null,
+  deathFreeze: 0,      // ms remaining of the brief death-flash freeze
+  isDaily: false,
+  lastTipShown: -1,
+  rafId: null,
+  lastFrameMs: 0,
+  accumulatorMs: 0,
+  canvas: null, ctx: null,
+
+  init() {
+    this.canvas = document.getElementById("gameCanvas");
+    this.ctx = this.canvas.getContext("2d");
+    this.particles = new Particles();
+    this.runner = new Runner();
+    this.levels = buildLevels();
+    this.save = Storage.load();
+    Sfx.setMuted(!!this.save.muted);
+    this.bindUI();
+    this.refreshMenuStats();
+    this.resize();
+    window.addEventListener("resize", () => this.resize());
+    requestAnimationFrame((t) => this.loop(t));
+  },
+
+  resize() {
+    const stage = document.getElementById("stage");
+    const availW = stage.clientWidth, availH = stage.clientHeight;
+    const scale = Math.min(availW / CFG.W, availH / CFG.H);
+    this.canvas.style.width = Math.floor(CFG.W * scale) + "px";
+    this.canvas.style.height = Math.floor(CFG.H * scale) + "px";
+  },
+
+  // ---------------- persistence helpers ----------------
+  persist() { Storage.save(this.save); },
+  levelSave(id) {
+    if (!this.save.levels[id]) this.save.levels[id] = { completed: false, bestAttempts: 0, bestTimeMs: 0 };
+    return this.save.levels[id];
+  },
+  refreshMenuStats() {
+    document.getElementById("statTotalAttempts").textContent = this.save.totalAttempts.toLocaleString();
+    const done = this.levels.filter((l) => this.save.levels[l.id] && this.save.levels[l.id].completed).length;
+    document.getElementById("statLevelsDone").textContent = done + " / " + this.levels.length;
+    document.getElementById("statSoundLabel").textContent = this.save.muted ? "OFF" : "ON";
+    this.updateMuteIcons();
+  },
+  updateMuteIcons() {
+    const icon = this.save.muted ? "🔇" : "🔊";
+    const b1 = document.getElementById("btnMuteHud"); if (b1) b1.textContent = icon;
+    const b2 = document.getElementById("btnToggleSoundPause"); if (b2) b2.textContent = icon + " SOUND: " + (this.save.muted ? "OFF" : "ON");
+  },
+
+  // ---------------- screen management ----------------
+  showScreen(id) {
+    document.querySelectorAll(".screen").forEach((el) => el.classList.remove("active"));
+    if (id) document.getElementById(id).classList.add("active");
+  },
+  goMenu() {
+    this.state = "menu"; this.showScreen("screenMenu");
+    document.getElementById("hud").classList.remove("active");
+    this.refreshMenuStats();
+  },
+  goLevelSelect() {
+    this.state = "levels"; this.buildLevelGrid(); this.showScreen("screenLevels");
+    document.getElementById("hud").classList.remove("active");
+    const dateKey = todayKey();
+    const dailyDone = this.save.daily.date === dateKey && this.save.daily.completed;
+    document.getElementById("dailyDateLabel").textContent = dailyDone ? "Completed — play again?" : "New layout every 24h";
+  },
+  buildLevelGrid() {
+    const grid = document.getElementById("levelGrid");
+    grid.innerHTML = "";
+    this.levels.forEach((lvl, i) => {
+      const unlocked = i + 1 <= this.save.unlockedLevel;
+      const ls = this.save.levels[lvl.id];
+      const card = document.createElement("div");
+      card.className = "lvlCard" + (unlocked ? "" : " locked");
+      const tier = TIERS[lvl.tier - 1];
+      card.style.borderColor = unlocked ? tier.fog : "";
+      card.innerHTML = "<div class='num'>" + lvl.id + "</div>" +
+        "<div class='rank' style='color:" + tier.fog + "'>" + (ls && ls.completed ? rankFor(ls.bestAttempts) : "") + "</div>";
+      if (unlocked) card.addEventListener("click", () => { Sfx.click(); this.startLevel(lvl.id); });
+      grid.appendChild(card);
+    });
+  },
+
+  // ---------------- starting / loading a level ----------------
+  startLevel(id) {
+    const lvl = this.levels.find((l) => l.id === id);
+    this.isDaily = false;
+    this.loadLevel(lvl);
+  },
+  startDaily() {
+    const key = todayKey();
+    const lvl = buildDailyLevel(key);
+    this.isDaily = true;
+    if (this.save.daily.date !== key) this.save.daily = { date: key, attempts: 0, completed: false, bestAttempts: 0 };
+    this.loadLevel(lvl);
+  },
+  loadLevel(lvl) {
+    this.current = lvl;
+    this.runtime = cloneRuntime(lvl);
+    this.attempts = 1;
+    this.lastTipShown = -1;
+    this.respawn(true);
+    this.state = "playing";
+    document.getElementById("hud").classList.add("active");
+    document.getElementById("hudLevelName").textContent = this.isDaily ? "DAILY CHALLENGE" : ("LEVEL " + lvl.id + " · " + lvl.tierName);
+    this.updateAttemptHud();
+    this.showScreen(null);
+  },
+  // Restarting deliberately (pause menu / "Retry") always begins a
+  // fresh attempt-count session, since the stat that matters is
+  // "how many tries did THIS run take to reach the goal."
+  resetAndPlay() {
+    this.attempts = 1;
+    this.respawn(true);
+    this.state = "playing";
+    this.showScreen(null);
+    document.getElementById("hud").classList.add("active");
+    this.updateAttemptHud();
+  },
+  respawn(first) {
+    this.runtime = cloneRuntime(this.current);
+    this.runner.reset(40, this.current.startY, this.current.speed);
+    Camera.reset(this.runner);
+    this.levelTimeSec = 0;
+    this.attemptStartMs = performance.now();
+    this.deathFreeze = 0;
+    if (!first) {
+      this.attempts += 1;
+      this.save.totalAttempts += 1;
+      if (this.isDaily) this.save.daily.attempts = (this.save.daily.attempts || 0) + 1;
+      this.persist();
+      this.updateAttemptHud();
+    }
+  },
+  updateAttemptHud() {
+    document.getElementById("hudAttemptNum").textContent = this.attempts;
+  },
+
+  // ---------------- input ----------------
+  onJumpPress() {
+    if (this.state !== "playing" || this.deathFreeze > 0) return;
+    this.runner.requestJump();
+  },
+
+  // ---------------- per-frame update ----------------
+  loop(nowMs) {
+    this.rafId = requestAnimationFrame((t) => this.loop(t));
+    if (!this.lastFrameMs) this.lastFrameMs = nowMs;
+    let frameDt = nowMs - this.lastFrameMs;
+    this.lastFrameMs = nowMs;
+    if (frameDt > 250) frameDt = 250;
+
+    if (this.state === "playing") {
+      if (this.deathFreeze > 0) {
+        this.deathFreeze -= frameDt;
+        if (this.deathFreeze <= 0) this.respawn(false);
+      } else {
+        this.accumulatorMs += frameDt;
+        let steps = 0;
+        while (this.accumulatorMs >= CFG.STEP_MS && steps < CFG.MAX_STEPS) {
+          this.tickPhysics(CFG.STEP_MS / 1000);
+          this.accumulatorMs -= CFG.STEP_MS;
+          steps++;
+        }
+      }
+      this.particles.update(frameDt / 1000);
+      Camera.follow(this.runner);
+      this.updateProgressBar();
+      this.maybeShowTip();
+    } else if (this.state === "complete") {
+      this.particles.update(frameDt / 1000);
+    }
+
+    this.render(nowMs / 1000);
+  },
+
+  tickPhysics(dtSec) {
+    this.levelTimeSec += dtSec;
+    const before = { grounded: this.runner.grounded };
+    const ev = stepPhysics(this.runner, this.current, this.runtime, dtSec, this.levelTimeSec);
+
+    if (!before.grounded && this.runner.grounded) {
+      this.particles.landingDust(this.runner.x, this.runner.y + CFG.PLAYER_R);
+      Sfx.land();
+    }
+    if (ev === "jump") { Sfx.jump(); this.particles.landingDust(this.runner.x, this.runner.y + CFG.PLAYER_R); }
+    if (ev === "airjump") { Sfx.airJump(); }
+    if (ev === "crumbleStart") Sfx.crumble();
+    if (ev === "death") this.onDeath();
+    if (ev === "win") this.onWin();
+
+    if (Math.random() < 0.45) this.particles.trail(this.runner.x - 10, this.runner.y + 4, this.current.fog);
+  },
+
+  onDeath() {
+    if (this.deathFreeze > 0) return;
+    this.particles.burst(this.runner.x, this.runner.y, "#e0392f", 26);
+    Sfx.death();
+    this.flash();
+    this.deathFreeze = 260;
+  },
+  flash() {
+    const f = document.getElementById("flash");
+    f.style.transition = "none"; f.style.opacity = "0.85";
+    requestAnimationFrame(() => { f.style.transition = "opacity .25s"; f.style.opacity = "0"; });
+  },
+
+  onWin() {
+    this.state = "complete";
+    const timeMs = performance.now() - this.attemptStartMs;
+    this.particles.confetti(this.runner.x, this.runner.y - 20);
+    Sfx.complete();
+    const id = this.current.id;
+    let best = null;
+    if (this.isDaily) {
+      this.save.daily.completed = true;
+      if (!this.save.daily.bestAttempts || this.attempts < this.save.daily.bestAttempts) this.save.daily.bestAttempts = this.attempts;
+      best = this.save.daily.bestAttempts;
+    } else {
+      const ls = this.levelSave(id);
+      const improved = !ls.completed || this.attempts < ls.bestAttempts;
+      ls.completed = true;
+      if (improved) { ls.bestAttempts = this.attempts; ls.bestTimeMs = timeMs; }
+      best = ls.bestAttempts;
+      const idx = this.levels.findIndex((l) => l.id === id);
+      if (idx + 2 > this.save.unlockedLevel) this.save.unlockedLevel = Math.min(this.levels.length, idx + 2);
+    }
+    this.persist();
+
+    document.getElementById("completeEyebrow").textContent = this.isDaily ? "Daily Challenge Cleared" : "Summit Reached";
+    document.getElementById("completeTitle").textContent = this.isDaily ? "DAILY CONQUERED" : this.current.name.toUpperCase();
+    document.getElementById("completeAttempts").textContent = this.attempts;
+    document.getElementById("completeTime").textContent = (timeMs / 1000).toFixed(1) + "s";
+    document.getElementById("completeBest").textContent = best ? best + " attempts" : "—";
+    document.getElementById("rankBadge").textContent = rankFor(this.attempts);
+    const nextBtn = document.getElementById("btnNextLevel");
+    const hasNext = !this.isDaily && this.levels.findIndex((l) => l.id === id) < this.levels.length - 1;
+    nextBtn.style.display = hasNext ? "flex" : "none";
+    this.showScreen("screenComplete");
+  },
+
+  updateProgressBar() {
+    const pct = clamp(this.runner.x / this.current.length, 0, 1) * 100;
+    document.getElementById("progressFill").style.width = pct + "%";
+  },
+
+  maybeShowTip() {
+    const tips = this.current.tips || [];
+    for (let i = 0; i < tips.length; i++) {
+      const tip = tips[i];
+      if (!tip.shown && this.runner.x >= tip.x - 60) {
+        tip.shown = true;
+        this.showTip(tip.text);
+      }
+    }
+  },
+  showTip(text) {
+    const el = document.getElementById("tip");
+    el.textContent = text;
+    el.classList.add("show");
+    clearTimeout(this._tipTimer);
+    this._tipTimer = setTimeout(() => el.classList.remove("show"), 2400);
+  },
+
+  // ---------------- rendering ----------------
+  render(tSec) {
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, CFG.W, CFG.H);
+    const lvl = this.current || this.levels[0];
+    const camX = this.state === "menu" || this.state === "levels" ? tSec * 18 : Camera.x;
+    const camY = this.state === "playing" || this.state === "complete" ? Camera.y : 0;
+
+    drawBackground(ctx, lvl, camX, tSec);
+
+    if (this.state === "playing" || this.state === "complete" || this.deathFreeze > 0) {
+      for (const p of this.runtime.platforms) {
+        if (p.gone) continue;
+        drawPlatform(ctx, p.x, p.y, p.w, p.h, camX, camY, lvl.fog, false, p.crumbling, p.crumbleT);
+      }
+      for (const m of this.runtime.movers) {
+        drawPlatform(ctx, m.curX !== undefined ? m.curX : m.baseX, m.curY !== undefined ? m.curY : m.baseY, m.w, m.h, camX, camY, lvl.fog, false, false, 0);
+      }
+      for (const s of lvl.spikes) drawSpike(ctx, s, camX, camY);
+      drawGoal(ctx, lvl.goal, camX, camY, tSec);
+      this.particles.draw(ctx, camX, camY);
+      if (this.deathFreeze <= 0) drawPlayer(ctx, this.runner, camX, camY, lvl.fog);
+    }
+  },
+
+  // ---------------- sharing ----------------
+  share() {
+    const canvas = document.getElementById("shareCanvas");
+    renderShareCard(canvas, {
+      levelName: this.isDaily ? "Daily Challenge" : this.current.name,
+      attempts: this.attempts,
+      won: true,
+      tier: this.current.tier,
+    });
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], "rage-peak.png", { type: "image/png" });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: "Rage Peak", text: "Beat my attempt count." }); return; } catch (e) { /* fall through */ }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "rage-peak-" + (this.isDaily ? "daily" : this.current.id) + ".png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }, "image/png");
+  },
+
+  // ---------------- UI binding ----------------
+  bindUI() {
+    const $ = (id) => document.getElementById(id);
+    const tap = (id, fn) => $(id).addEventListener("click", (e) => { e.preventDefault(); Sfx.click(); fn(); });
+
+    tap("btnPlay", () => {
+      const idx = clamp(this.save.unlockedLevel - 1, 0, this.levels.length - 1);
+      this.startLevel(this.levels[idx].id);
+    });
+    tap("btnLevels", () => this.goLevelSelect());
+    tap("btnDailyMenu", () => this.startDaily());
+    tap("btnDailyCard", () => this.startDaily());
+    tap("btnBackFromLevels", () => this.goMenu());
+    tap("btnPause", () => this.pause());
+    tap("btnResume", () => this.resume());
+    tap("btnRestartLevel", () => this.resetAndPlay());
+    tap("btnExitToMenu", () => { this.state = "levels"; this.goLevelSelect(); });
+    tap("btnNextLevel", () => {
+      const idx = this.levels.findIndex((l) => l.id === this.current.id);
+      if (idx + 1 < this.levels.length) this.startLevel(this.levels[idx + 1].id);
+    });
+    tap("btnRetryFromComplete", () => this.resetAndPlay());
+    tap("btnLevelsFromComplete", () => this.goLevelSelect());
+    tap("btnShare", () => this.share());
+
+    const toggleMute = () => {
+      this.save.muted = !this.save.muted;
+      Sfx.setMuted(this.save.muted);
+      this.persist();
+      this.updateMuteIcons();
+      document.getElementById("statSoundLabel").textContent = this.save.muted ? "OFF" : "ON";
+    };
+    $("btnMuteHud").addEventListener("click", (e) => { e.preventDefault(); toggleMute(); });
+    $("btnToggleSoundPause").addEventListener("click", (e) => { e.preventDefault(); toggleMute(); });
+    $("statSoundLabel").addEventListener("click", toggleMute);
+
+    // jump input: pointer + keyboard, anywhere on the canvas/stage
+    const stage = document.getElementById("stage");
+    const jumpHandler = (e) => {
+      if (e.target.closest(".screen") || e.target.closest("#hudRight")) return;
+      this.onJumpPress();
+    };
+    stage.addEventListener("pointerdown", jumpHandler);
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "Space") { e.preventDefault(); this.onJumpPress(); }
+      if (e.code === "Escape") { if (this.state === "playing") this.pause(); else if (this.state === "paused") this.resume(); }
+    });
+  },
+
+  pause() {
+    if (this.state !== "playing") return;
+    this.state = "paused";
+    this.showScreen("screenPause");
+  },
+  resume() {
+    this.state = "playing";
+    this.lastFrameMs = 0;
+    this.showScreen(null);
+  },
+};
+
+function rankFor(attempts) {
+  if (attempts <= 3) return "S";
+  if (attempts <= 7) return "A";
+  if (attempts <= 15) return "B";
+  if (attempts <= 30) return "C";
+  return "D";
+}
+
+window.addEventListener("load", () => Game.init());
+window.addEventListener("contextmenu", (e) => e.preventDefault());
+
+</script>
+</body>
+</html>
