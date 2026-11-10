@@ -1,0 +1,4 @@
+@extends('layouts.admin')
+@section('title','Messages')
+@section('content')<h1>Messages</h1><div class="card tablewrap"><table><thead><tr><th>From</th><th>Message</th><th>Source</th><th>Received</th><th>Status</th></tr></thead><tbody>@forelse($messages as $m)<tr><td><b>{{ $m->name }}</b><div class="hint">{{ $m->email }}</div></td><td style="white-space:pre-wrap">{{ $m->message }}</td><td>{{ $m->source }}</td><td>{{ $m->created_at->format('M j, H:i') }}</td>
+<td><form method="POST" action="{{ route('admin.messages.status', $m) }}">@csrf<select name="status" onchange="this.form.submit()">@foreach(['new','read','replied'] as $s)<option @selected($m->status===$s)>{{ $s }}</option>@endforeach</select></form></td></tr>@empty<tr><td colspan="5">No messages.</td></tr>@endforelse</tbody></table>{{ $messages->links() }}</div>@endsection

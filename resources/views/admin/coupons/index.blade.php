@@ -1,0 +1,5 @@
+@extends('layouts.admin')
+@section('title','Coupons')
+@section('content')<h1>Coupons <a class="btn sm" href="{{ route('admin.coupons.create') }}">Add new</a></h1><div class="card tablewrap"><table><thead><tr><th>Code</th><th>Discount</th><th>Rules</th><th>Used</th><th>Active</th><th></th></tr></thead><tbody>
+@foreach($coupons as $c)<tr><td><a href="{{ route('admin.coupons.edit', $c) }}"><b>{{ $c->code }}</b></a><div class="hint">{{ $c->description }}</div></td><td>{{ $c->type==='percent' ? rtrim(rtrim($c->value,'0'),'.').'%' : money($c->value) }}</td><td class="hint">@if($c->min_subtotal)Min {{ money($c->min_subtotal) }} · @endif @if($c->ends_at)Ends {{ $c->ends_at->format('M j, Y') }} · @endif @if($c->usage_limit)Limit {{ $c->usage_limit }}@endif</td><td>{{ $c->usages_count }}</td><td>{{ $c->is_active ? 'yes':'no' }}</td>
+<td><form method="POST" action="{{ route('admin.coupons.destroy', $c) }}" onsubmit="return confirm('Delete coupon?')">@csrf @method('DELETE')<button class="btn sm red">Delete</button></form></td></tr>@endforeach</tbody></table></div>@endsection

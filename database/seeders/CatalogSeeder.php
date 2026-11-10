@@ -1,0 +1,81 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+
+/**
+ * DEMO catalogue. Product names/prices mirror what is visible in the reference screenshots; everything else
+ * (descriptions, stock, SKUs) is invented demo data and is labelled as such. Images are labelled placeholders.
+ * NOTE: the reference lists both "Spectacle Frame" and "Spectacle Frames"; they are merged into one category here.
+ */
+class CatalogSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $cats = [];
+        foreach (['Accessories', 'John Jacobs', 'Kids Spectacles', 'Lens', 'Man', 'Spectacle Frames', 'Spectacles', 'Sunglasses', 'Uncategorized'] as $i => $name) {
+            $cats[$name] = Category::firstOrCreate(['slug' => Str::slug($name)], ['name' => $name, 'position' => $i, 'is_active' => true]);
+        }
+        $brands = [];
+        foreach (['John Jacobs', 'Vincent Chase', 'Air', 'Voyage', 'Aquacolor', 'Villain', 'Generic'] as $b) {
+            $brands[$b] = Brand::firstOrCreate(['slug' => Str::slug($b)], ['name' => $b, 'is_active' => true]);
+        }
+
+        // [name, brand, price, sale, categories, stock, flags(new,featured,tryon), image#, type]
+        $rows = [
+            ['Equate Streak-Free Lens Cleaner 8 oz Spray Bottle', 'Generic', 169, 149, ['Accessories'], 40, ['new'], 7],
+            ['MR.Siga Microfiber Cleaning Cloths for Lens, Eyeglasses, Gray and Navy 6 Pack, 8 x 7 Inches', 'Generic', 499, 449, ['Accessories'], 60, ['new'], 8], // reference showed ₹1.00 (likely a test price)
+            ['Voyage Folding Spectacle Case', 'Voyage', 199, null, ['Accessories'], 25, ['new'], 7],
+            ['Eyeglass Sunglass Repair with Nose Pads Washer Caps Screwdriver Tiny Micro Screws Assortment Stainless Spectacles Watch', 'Generic', 699, 599, ['Accessories'], 30, ['new'], 8],
+            ['John Jacobs Transparent Full Rim Cat Eye with Premium Anti-Glare Lenses', 'John Jacobs', 3500, 2500, ['John Jacobs', 'Spectacle Frames', 'Spectacles'], 12, ['featured', 'tryon'], 2],
+            ['Aquacolor Candypack Misty Gray Zero Power Daily', 'Aquacolor', 179, null, ['Lens'], 80, [], 8],
+            ['VILLAIN WINGMAN BOTTLE OPENER SUNGLASSES', 'Villain', 599, null, ['Sunglasses', 'Man'], 15, [], 5],
+            ['Vincent Chase Online Pink Full Rim Wayfarer', 'Vincent Chase', 800, null, ['Sunglasses'], 18, ['tryon'], 6],
+            ['Air Light Blue Square Eyeglasses (TR02MG4541-C6)', 'Air', 2199, 999, ['Spectacle Frames', 'Spectacles', 'Man'], 20, ['featured'], 1],
+            ['Air Online Green Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 800, ['Spectacle Frames', 'Spectacles'], 22, ['featured', 'tryon'], 2],
+            ['Air Transparent Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 1500, ['Spectacle Frames', 'Spectacles'], 14, [], 3],
+            ['Apex Transparent Square Eyeglasses (V62005MG5369-C4)', 'Generic', null, null, ['Spectacle Frames', 'Man'], 0, [], 3], // no price in reference → "Read more"
+            ['Black & Silver Retro Square Sunglasses (MG2970-C1)', 'Generic', 3000, 2299, ['Sunglasses', 'Man'], 9, [], 4],
+            ['John Jacobs Green Full Rim Wayfarer', 'John Jacobs', 4000, 2400, ['John Jacobs', 'Spectacles', 'Sunglasses'], 11, ['featured', 'tryon'], 5],
+            ['Pink Gradient Black Full Rim Wayfarer', 'Generic', 1800, null, ['Sunglasses'], 10, ['tryon'], 6],
+            ['Kids Flexi Round Frame', 'Generic', 1200, 999, ['Kids Spectacles', 'Spectacle Frames'], 16, [], 1],
+        ];
+
+        foreach ($rows as $i => [$name, $brand, $price, $sale, $catNames, $stock, $flags, $img]) {
+            $p = Product::firstOrCreate(['slug' => Str::slug($name)], [
+                'brand_id' => $brands[$brand]->id, 'name' => $name, 'sku' => 'DEMO-'.str_pad($i + 1, 3, '0', STR_PAD_LEFT), 'type' => 'simple',
+                'short_description' => 'DEMO product — seeded sample data.', 'description' => "DEMO product description.\n\nThis item was seeded for testing. Replace it from Admin > Products.",
+                'price' => $price, 'sale_price' => $sale, 'stock_qty' => $stock, 'manage_stock' => true, 'status' => 'published',
+                'is_featured' => in_array('featured', $flags), 'is_new_arrival' => in_array('new', $flags), 'tryon_enabled' => in_array('tryon', $flags),
+                'specs' => array_filter(['gender' => in_array('Man', $catNames) ? 'Men' : 'Unisex', 'frame_shape' => Str::contains($name, ['Round']) ? 'Round' : (Str::contains($name, ['Square']) ? 'Square' : (Str::contains($name, ['Wayfarer']) ? 'Wayfarer' : null)),
+                    'frame_color' => Str::contains($name, ['Green']) ? 'Green' : (Str::contains($name, ['Pink']) ? 'Pink' : (Str::contains($name, ['Transparent']) ? 'Transparent' : null))]),
+                'tags' => ['demo'], 'published_at' => now()->subDays(30 - $i),
+            ]);
+            if ($p->wasRecentlyCreated) {
+                $p->categories()->sync(collect($catNames)->map(fn ($n) => $cats[$n]->id));
+                $p->images()->create(['path' => "images/placeholders/prod-{$img}.svg", 'alt' => $name.' (placeholder image)', 'position' => 0]);
+            }
+        }
+
+        // One VARIABLE product so variants/stock/pricing paths are exercised.
+        $v = Product::firstOrCreate(['slug' => 'vincent-chase-polarized-black-full-rim-wayfarer'], [
+            'brand_id' => $brands['Vincent Chase']->id, 'name' => 'Vincent Chase Polarized Black Full Rim Wayfarer', 'sku' => 'DEMO-VAR-001', 'type' => 'variable',
+            'short_description' => 'DEMO variable product with two sizes.', 'description' => 'DEMO product. Sizes are seeded variants.', 'price' => 1499, 'stock_qty' => 0, 'manage_stock' => true,
+            'status' => 'published', 'is_featured' => true, 'tryon_enabled' => true, 'specs' => ['gender' => 'Unisex', 'frame_shape' => 'Wayfarer', 'frame_color' => 'Black'],
+            'tags' => ['demo'], 'published_at' => now()->subDays(2),
+        ]);
+        if ($v->wasRecentlyCreated) {
+            $v->categories()->sync([$cats['Sunglasses']->id]);
+            $v->images()->create(['path' => 'images/placeholders/prod-5.svg', 'alt' => $v->name.' (placeholder image)', 'position' => 0]);
+            $v->variants()->createMany([
+                ['label' => 'Medium', 'sku' => 'DEMO-VAR-001-M', 'price' => 1499, 'stock_qty' => 10, 'is_active' => true, 'options' => ['size' => 'Medium']],
+                ['label' => 'Large', 'sku' => 'DEMO-VAR-001-L', 'price' => 1599, 'sale_price' => 1399, 'stock_qty' => 6, 'is_active' => true, 'options' => ['size' => 'Large']],
+            ]);
+        }
+    }
+}

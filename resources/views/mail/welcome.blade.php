@@ -1,0 +1,2 @@
+<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;color:#222;max-width:560px">
+<h2>Welcome, {{ $user->name }}!</h2><p>Your {{ setting('store_name', 'JB Optician') }} account is ready. You can view orders, track shipments and manage addresses from <a href="{{ route('account.dashboard') }}">My account</a>.</p></body></html>

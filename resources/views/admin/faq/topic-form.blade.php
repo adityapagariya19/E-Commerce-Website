@@ -1,0 +1,4 @@
+@extends('layouts.admin')
+@section('title','Help topic')
+@section('content')<h1>{{ $topic->exists ? 'Edit topic' : 'Add topic' }}</h1><form class="card" style="max-width:520px" method="POST" action="{{ $topic->exists ? route('admin.faq-topics.update', $topic) : route('admin.faq-topics.store') }}">@csrf @if($topic->exists) @method('PUT') @endif
+<div class="f"><label>Title *</label><input type="text" name="title" value="{{ old('title', $topic->title) }}" required></div><div class="f"><label>Order</label><input type="number" min="0" name="position" value="{{ old('position', $topic->position ?? 0) }}"></div><label style="font-weight:400"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $topic->is_active))> Active</label><br><br><button class="btn">Save</button></form>@endsection

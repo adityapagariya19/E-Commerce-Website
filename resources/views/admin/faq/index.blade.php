@@ -1,0 +1,4 @@
+@extends('layouts.admin')
+@section('title','Help questions')
+@section('content')<h1>Help questions <a class="btn sm" href="{{ route('admin.faqs.create') }}">Add question</a></h1><p class="hint">Questions without an answer show “please contact us” on the storefront — policies are never invented.</p>
+<div class="card tablewrap"><table><thead><tr><th>Topic</th><th>Question</th><th>Answer</th><th>Active</th><th></th></tr></thead><tbody>@foreach($faqs as $f)<tr><td>{{ $f->topic?->title }}</td><td><a href="{{ route('admin.faqs.edit', $f) }}">{{ $f->question }}</a></td><td>{!! $f->answer ? e(\Illuminate\Support\Str::limit($f->answer, 70)) : '<span class="pill warn">needs answer</span>' !!}</td><td>{{ $f->is_active ? 'yes':'no' }}</td><td><form method="POST" action="{{ route('admin.faqs.destroy', $f) }}" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="btn sm red">Delete</button></form></td></tr>@endforeach</tbody></table></div>@endsection

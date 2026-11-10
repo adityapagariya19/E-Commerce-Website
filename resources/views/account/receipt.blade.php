@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Receipt #{{ $order->order_number }}</title>
+<style>body{font-family:Arial,sans-serif;max-width:720px;margin:30px auto;color:#222;font-size:14px}table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}.r{text-align:right}@media print{.no-print{display:none}}</style></head><body>
+<h1 style="margin:0">{{ setting('store_name', 'JB Optician') }}</h1><p>{{ setting('store_address') }}</p><h2>Receipt — Order #{{ $order->order_number }}</h2>
+<p>Date: {{ $order->placed_at?->format('F j, Y') }} · Payment: {{ $order->paymentMethodLabel() }} ({{ str_replace('_',' ',$order->payment_status) }})</p>
+<table><tr><th>Item</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Total</th></tr>@foreach($order->items as $i)<tr><td>{{ $i->name }}@if($i->variant_label) ({{ $i->variant_label }})@endif</td><td class="r">{{ $i->qty }}</td><td class="r">{{ money($i->unit_price) }}</td><td class="r">{{ money($i->line_total) }}</td></tr>@endforeach
+<tr><td colspan="3" class="r">Subtotal</td><td class="r">{{ money($order->subtotal) }}</td></tr>@if($order->discount_total > 0)<tr><td colspan="3" class="r">Discount</td><td class="r">−{{ money($order->discount_total) }}</td></tr>@endif
+<tr><td colspan="3" class="r">Shipping</td><td class="r">{{ money($order->shipping_total) }}</td></tr>@if($order->tax_total > 0)<tr><td colspan="3" class="r">Tax</td><td class="r">{{ money($order->tax_total) }}</td></tr>@endif
+<tr><td colspan="3" class="r"><b>Total</b></td><td class="r"><b>{{ money($order->total) }}</b></td></tr>@if($order->refunded_total > 0)<tr><td colspan="3" class="r">Refunded</td><td class="r">−{{ money($order->refunded_total) }}</td></tr>@endif</table>
+<p class="no-print"><button onclick="window.print()">Print / Save as PDF</button></p></body></html>

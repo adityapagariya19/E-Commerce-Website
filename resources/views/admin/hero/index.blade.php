@@ -1,0 +1,4 @@
+@extends('layouts.admin')
+@section('title','Hero slides')
+@section('content')<h1>Hero slides <a class="btn sm" href="{{ route('admin.hero-slides.create') }}">Add slide</a></h1><div class="card tablewrap"><table><thead><tr><th></th><th>Heading</th><th>CTA</th><th>Order</th><th>Active</th><th></th></tr></thead><tbody>
+@foreach($slides as $s)<tr><td><img class="thumb lg" src="{{ media_url($s->image) }}" alt=""></td><td><a href="{{ route('admin.hero-slides.edit', $s) }}">{{ $s->heading }}</a><div class="hint">{{ $s->eyebrow }}</div></td><td>{{ $s->cta_label }} → {{ $s->cta_url }}</td><td>{{ $s->position }}</td><td>{{ $s->is_active ? 'yes':'no' }}</td><td><form method="POST" action="{{ route('admin.hero-slides.destroy', $s) }}" onsubmit="return confirm('Delete slide?')">@csrf @method('DELETE')<button class="btn sm red">Delete</button></form></td></tr>@endforeach</tbody></table></div>@endsection

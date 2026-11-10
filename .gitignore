@@ -1,0 +1,15 @@
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+.env
+.env.backup
+.phpunit.result.cache
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/views/*
+!/storage/framework/cache/data/.gitkeep
+!/storage/framework/views/.gitkeep
+*.sqlite
+tools/.adminer/
+tools/adminer-*.php
