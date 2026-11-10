@@ -9,10 +9,10 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_SEED_EMAIL', 'admin@jboptician.test');
-        $password = env('ADMIN_SEED_PASSWORD', 'ChangeMe!12345');
+        $email = env('ADMIN_SEED_EMAIL', 'admin@gmail.com');
+        $password = env('ADMIN_SEED_PASSWORD', 'admin');
 
-        User::updateOrCreate(['email' => $email], ['name' => 'Super Admin', 'password' => $password, 'role' => 'super_admin', 'is_active' => true]);
+        User::updateOrCreate(['email' => $email], ['name' => 'admin', 'password' => $password, 'role' => 'super_admin', 'is_active' => true]);
 
         // Extra demo logins ONLY in local/testing so each role can be tried. Never created in production.
         if (app()->environment(['local', 'testing'])) {

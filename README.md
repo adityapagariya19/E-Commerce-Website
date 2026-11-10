@@ -110,12 +110,12 @@ php artisan serve
 
 ## 🔐 Default Demo Credentials (Local Development)
 
-| Role | Email | Password |
-|---|---|---|
-| **Super Admin** | `admin@jboptician.test` | `ChangeMe!12345` |
-| **Store Manager** | `manager@jboptician.test` | `ChangeMe!12345` |
-| **Content Manager** | `content@jboptician.test` | `ChangeMe!12345` |
-| **Customer** | `customer@jboptician.test` | `ChangeMe!12345` |
+| Role | Username | Email | Password |
+|---|---|---|---|
+| **Super Admin** | `admin` | `admin@gmail.com` | `admin` |
+| **Store Manager** | `manager` | `manager@jboptician.test` | `admin` |
+| **Content Manager** | `content` | `content@jboptician.test` | `admin` |
+| **Customer** | `customer` | `customer@jboptician.test` | `admin` |
 
 To create a new custom admin account:
 ```bash

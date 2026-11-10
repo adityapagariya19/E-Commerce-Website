@@ -33,7 +33,7 @@ This single ZIP contains the whole project. You do not copy individual files any
    ```
 6. Browser में खोलें:
    * Website: http://127.0.0.1:8000
-   * Admin: http://127.0.0.1:8000/admin/login  → `admin@jboptician.test` / `ChangeMe!12345` (**असली use से पहले बदलें**)
+   * Admin: http://127.0.0.1:8000/admin/login  → `admin@gmail.com` (या username: `admin`) / `admin`
 
 ## B) आपका database पहले से बना है? / Already have the old database?
 

@@ -19,9 +19,9 @@ class CreateAdmin extends Command
             $this->error('Unknown role. Use one of: '.implode(', ', array_keys(config('permissions.roles'))));
             return self::FAILURE;
         }
-        $password = $this->option('password') ?: $this->secret('Password (min 10 chars, letters + numbers)');
+        $password = $this->option('password') ?: $this->secret('Password');
         $v = Validator::make(['email' => $this->argument('email'), 'password' => $password], [
-            'email' => ['required', 'email'], 'password' => ['required', Password::min(10)->letters()->numbers()],
+            'email' => ['required', 'email'], 'password' => ['required', 'string', 'min:3'],
         ]);
         if ($v->fails()) {
             foreach ($v->errors()->all() as $e) { $this->error($e); }

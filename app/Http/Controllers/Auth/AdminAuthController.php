@@ -17,7 +17,8 @@ class AdminAuthController extends Controller
     public function login(Request $request)
     {
         $d = $request->validate(['email' => ['required', 'string'], 'password' => ['required', 'string']]);
-        if (! Auth::attempt(['email' => $d['email'], 'password' => $d['password'], 'is_active' => true], $request->boolean('remember'))) {
+        $loginField = filter_var($d['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        if (! Auth::attempt([$loginField => $d['email'], 'password' => $d['password'], 'is_active' => true], $request->boolean('remember'))) {
             return back()->withInput($request->only('email'))->withErrors(['email' => 'These credentials do not match our records.']);
         }
         if (! Auth::user()->isAdmin()) {
