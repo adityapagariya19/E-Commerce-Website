@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             ContentSeeder::class,
             CouponSeeder::class,
-            DemoOrderSeeder::class, // DEMO data only — flagged orders.is_demo = 1
         ]);
     }
 }

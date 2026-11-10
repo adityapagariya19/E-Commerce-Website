@@ -24,7 +24,7 @@ This single ZIP contains the whole project. You do not copy individual files any
    ```bash
    mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS jb_optician CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
    ```
-5. Tables + demo data + image link:
+5. Tables + store setup + image link:
    ```bash
    php artisan migrate --seed
    php artisan storage:link

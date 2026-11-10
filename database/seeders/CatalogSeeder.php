@@ -48,30 +48,31 @@ class CatalogSeeder extends Seeder
 
         foreach ($rows as $i => [$name, $brand, $price, $sale, $catNames, $stock, $flags, $img]) {
             $p = Product::firstOrCreate(['slug' => Str::slug($name)], [
-                'brand_id' => $brands[$brand]->id, 'name' => $name, 'sku' => 'DEMO-'.str_pad($i + 1, 3, '0', STR_PAD_LEFT), 'type' => 'simple',
-                'short_description' => 'DEMO product — seeded sample data.', 'description' => "DEMO product description.\n\nThis item was seeded for testing. Replace it from Admin > Products.",
+                'brand_id' => $brands[$brand]->id, 'name' => $name, 'sku' => 'JBO-'.str_pad($i + 1, 4, '0', STR_PAD_LEFT), 'type' => 'simple',
+                'short_description' => 'Premium optical eyewear designed for everyday comfort, style, and clear vision.',
+                'description' => "High-grade optical eyewear crafted with lightweight, durable materials. Engineered for a comfortable fit and optimal vision clarity. Compatible with single vision, bifocal, and progressive prescription lenses.",
                 'price' => $price, 'sale_price' => $sale, 'stock_qty' => $stock, 'manage_stock' => true, 'status' => 'published',
                 'is_featured' => in_array('featured', $flags), 'is_new_arrival' => in_array('new', $flags), 'tryon_enabled' => in_array('tryon', $flags),
                 'specs' => array_filter(['gender' => in_array('Man', $catNames) ? 'Men' : 'Unisex', 'frame_shape' => Str::contains($name, ['Round']) ? 'Round' : (Str::contains($name, ['Square']) ? 'Square' : (Str::contains($name, ['Wayfarer']) ? 'Wayfarer' : null)),
                     'frame_color' => Str::contains($name, ['Green']) ? 'Green' : (Str::contains($name, ['Pink']) ? 'Pink' : (Str::contains($name, ['Transparent']) ? 'Transparent' : null))]),
-                'tags' => ['demo'], 'published_at' => now()->subDays(30 - $i),
+                'tags' => ['eyewear', 'optical', 'jboptician'], 'published_at' => now()->subDays(30 - $i),
             ]);
             if ($p->wasRecentlyCreated) {
                 $p->categories()->sync(collect($catNames)->map(fn ($n) => $cats[$n]->id));
-                $p->images()->create(['path' => "images/placeholders/prod-{$img}.svg", 'alt' => $name.' (placeholder image)', 'position' => 0]);
+                $p->images()->create(['path' => "images/placeholders/prod-{$img}.svg", 'alt' => $name, 'position' => 0]);
             }
         }
 
         // One VARIABLE product so variants/stock/pricing paths are exercised.
         $v = Product::firstOrCreate(['slug' => 'vincent-chase-polarized-black-full-rim-wayfarer'], [
-            'brand_id' => $brands['Vincent Chase']->id, 'name' => 'Vincent Chase Polarized Black Full Rim Wayfarer', 'sku' => 'DEMO-VAR-001', 'type' => 'variable',
-            'short_description' => 'DEMO variable product with two sizes.', 'description' => 'DEMO product. Sizes are seeded variants.', 'price' => 1499, 'stock_qty' => 0, 'manage_stock' => true,
+            'brand_id' => $brands['Vincent Chase']->id, 'name' => 'Vincent Chase Polarized Black Full Rim Wayfarer', 'sku' => 'JBO-VAR-001', 'type' => 'variable',
+            'short_description' => 'Classic polarized full rim wayfarer sunglasses with UV protection.', 'description' => 'Engineered with premium polarized lenses that reduce glare and enhance visual clarity. Features lightweight acetate frames and durable metal hinges for long-lasting comfort.', 'price' => 1499, 'stock_qty' => 0, 'manage_stock' => true,
             'status' => 'published', 'is_featured' => true, 'tryon_enabled' => true, 'specs' => ['gender' => 'Unisex', 'frame_shape' => 'Wayfarer', 'frame_color' => 'Black'],
-            'tags' => ['demo'], 'published_at' => now()->subDays(2),
+            'tags' => ['sunglasses', 'polarized', 'jboptician'], 'published_at' => now()->subDays(2),
         ]);
         if ($v->wasRecentlyCreated) {
             $v->categories()->sync([$cats['Sunglasses']->id]);
-            $v->images()->create(['path' => 'images/placeholders/prod-5.svg', 'alt' => $v->name.' (placeholder image)', 'position' => 0]);
+            $v->images()->create(['path' => 'images/placeholders/prod-5.svg', 'alt' => $v->name, 'position' => 0]);
             $v->variants()->createMany([
                 ['label' => 'Medium', 'sku' => 'DEMO-VAR-001-M', 'price' => 1499, 'stock_qty' => 10, 'is_active' => true, 'options' => ['size' => 'Medium']],
                 ['label' => 'Large', 'sku' => 'DEMO-VAR-001-L', 'price' => 1599, 'sale_price' => 1399, 'stock_qty' => 6, 'is_active' => true, 'options' => ['size' => 'Large']],

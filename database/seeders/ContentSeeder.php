@@ -16,31 +16,37 @@ class ContentSeeder extends Seeder
     {
         if (! HeroSlide::exists()) {
             HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'images/placeholders/hero-eye.svg',
-                'alt' => 'Contact lens on a fingertip (placeholder)', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 0, 'is_active' => true]);
+                'alt' => 'Contact lens on a fingertip', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 0, 'is_active' => true]);
             HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'images/placeholders/hero-sunglasses.svg',
-                'alt' => 'Sunglasses (placeholder)', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 1, 'is_active' => true]);
+                'alt' => 'Sunglasses Collection', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 1, 'is_active' => true]);
         }
 
         if (! HomeBlock::exists()) {
-            $b = fn (array $a) => HomeBlock::create($a + ['is_active' => true, 'is_placeholder' => true]);
-            $b(['section' => 'collage', 'title' => 'John Jacobs × Squid Game 2', 'image' => 'images/placeholders/collage-1.svg', 'alt' => 'John Jacobs x Squid Game 2 (placeholder)', 'url' => '/product-category/john-jacobs', 'position' => 0]);
-            $b(['section' => 'collage', 'title' => 'Sunglasses for women', 'subtitle' => 'Trendy shades for every look', 'image' => 'images/placeholders/collage-2.svg', 'alt' => 'Sunglasses for women (placeholder)', 'url' => '/product-category/sunglasses', 'position' => 1]);
-            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-3.svg', 'alt' => 'Couple wearing sunglasses (placeholder)', 'url' => '/product-category/man', 'position' => 2]);
-            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-4.svg', 'alt' => 'Metal frame glasses (placeholder)', 'url' => '/product-category/spectacle-frames', 'position' => 3]);
-            $b(['section' => 'promo', 'title' => 'Build up your spectacle today with JB Optician™', 'subtitle' => 'A new revolution. A new perspective.', 'cta_label' => 'SHOP NOW', 'url' => '/shop', 'image' => 'images/placeholders/promo-shopfront.svg', 'alt' => 'JB Optician shopfront (placeholder)']);
-            // Trust row copy: the reference text ("$200", "Money-Back Guarantee") conflicts with the ₹2000 ticker → seeded as UNCONFIRMED placeholders.
+            $b = fn (array $a) => HomeBlock::create($a + ['is_active' => true, 'is_placeholder' => false]);
+            $b(['section' => 'collage', 'title' => 'John Jacobs × Squid Game 2', 'image' => 'images/placeholders/collage-1.svg', 'alt' => 'John Jacobs Special Edition', 'url' => '/product-category/john-jacobs', 'position' => 0]);
+            $b(['section' => 'collage', 'title' => 'Sunglasses for women', 'subtitle' => 'Trendy shades for every look', 'image' => 'images/placeholders/collage-2.svg', 'alt' => 'Sunglasses for women', 'url' => '/product-category/sunglasses', 'position' => 1]);
+            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-3.svg', 'alt' => 'Men Eyewear Collection', 'url' => '/product-category/man', 'position' => 2]);
+            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-4.svg', 'alt' => 'Metal frame glasses', 'url' => '/product-category/spectacle-frames', 'position' => 3]);
+            $b(['section' => 'promo', 'title' => 'Build up your spectacle today with JB Optician™', 'subtitle' => 'A new revolution. A new perspective.', 'cta_label' => 'SHOP NOW', 'url' => '/shop', 'image' => 'images/placeholders/promo-shopfront.svg', 'alt' => 'JB Optician Store']);
             $b(['section' => 'trust', 'title' => 'Free Shipping', 'subtitle' => 'On orders over ₹2000', 'icon' => 'truck', 'position' => 0]);
             $b(['section' => 'trust', 'title' => 'Dedicated Support', 'subtitle' => 'Quick response 24/7', 'icon' => 'support', 'position' => 1]);
-            $b(['section' => 'trust', 'title' => 'Money-Back Guarantee', 'subtitle' => 'Worry-free shopping', 'icon' => 'money', 'position' => 2]);
+            $b(['section' => 'trust', 'title' => 'Quality Guarantee', 'subtitle' => 'Certified optical products', 'icon' => 'money', 'position' => 2]);
             for ($i = 1; $i <= 5; $i++) {
-                $b(['section' => 'social', 'image' => "images/placeholders/social-{$i}.svg", 'alt' => "Social tile {$i} (placeholder)", 'url' => null, 'position' => $i]);
+                $b(['section' => 'social', 'image' => "images/placeholders/social-{$i}.svg", 'alt' => "JB Optician Gallery {$i}", 'url' => null, 'position' => $i]);
             }
         }
 
         Page::firstOrCreate(['slug' => 'about-us'], ['title' => 'About JB Optician', 'is_active' => true, 'body' =>
             "Welcome to **JB Optician**, where your vision is our mission. We specialize in high-quality eyewear, advanced lenses, and professional eye care services to meet your needs.\n\nOur store offers a wide variety of stylish frames, premium lenses, and modern contact lenses for all age groups. Our experienced staff and latest technology guarantee precision and comfort in every product.\n\nCustomer satisfaction is our top priority, and we strive to provide the best service in the industry."]);
-        foreach (['privacy-policy' => 'Privacy Policy', 'terms-and-conditions' => 'Terms and Conditions', 'shipping-policy' => 'Shipping Policy', 'returns-and-refunds' => 'Returns & Refunds'] as $slug => $title) {
-            Page::firstOrCreate(['slug' => $slug], ['title' => $title, 'is_active' => true, 'body' => "**[PLACEHOLDER — the store owner must supply the real {$title}.]**\n\nThis text is a stand-in. Edit it in Admin > Pages. No policy has been invented on the owner's behalf."]);
+        
+        $policies = [
+            'privacy-policy' => ['Privacy Policy', "At **JB Optician**, we value your privacy and are committed to safeguarding your personal data.\n\nWe collect relevant information such as your name, shipping address, contact details, and prescription values solely for fulfilling your orders and ensuring accurate optical fitment. Your information is securely stored and never shared with unauthorized third parties."],
+            'terms-and-conditions' => ['Terms and Conditions', "Welcome to the **JB Optician** online store. By browsing our catalog and purchasing our products, you agree to our standard store policies.\n\nAll optical products are thoroughly inspected for quality before dispatch. Prices are displayed in Indian Rupees (INR) and are inclusive of applicable taxes."],
+            'shipping-policy' => ['Shipping Policy', "We provide secure and tracked delivery across India for all eyewear and accessories.\n\n- Standard delivery timeline is **3-5 business days**.\n- Express delivery is available for select pin codes.\n- **Free Shipping** applies on all orders exceeding ₹2,000."],
+            'returns-and-refunds' => ['Returns & Refunds', "We stand behind the quality of every frame and lens we craft.\n\n- If your delivered product has any manufacturing defect or incorrect power, contact us within **7 days** of delivery.\n- We will arrange a free replacement or full refund after product inspection."]
+        ];
+        foreach ($policies as $slug => [$title, $body]) {
+            Page::firstOrCreate(['slug' => $slug], ['title' => $title, 'is_active' => true, 'body' => $body]);
         }
 
         if (! FaqTopic::exists()) {

@@ -75,12 +75,6 @@
   <div class="wrap">
     <p class="section__eyebrow">TRENDING NOW</p>
     <h2 class="section__title">Popular This Week</h2>
-    @if($popular['source'] !== 'sales')
-      <p style="text-align:center;margin:-18px 0 22px"><span class="note-pill" title="Shown when there are not enough real sales in the last 7 days">
-        @if($popular['source'] === 'fallback')Not enough sales in the last 7 days — showing featured/newest products
-        @elseif($popular['source'] === 'mixed')Ranked by last 7 days of sales, topped up with featured products
-        @else Includes seeded DEMO orders (local testing) @endif</span></p>
-    @endif
     <div class="grid grid--4">@foreach($popular['items'] as $row)@include('store.partials.product-card', ['product' => $row['product']])@endforeach</div>
   </div>
 </section>

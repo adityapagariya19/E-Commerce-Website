@@ -4,8 +4,7 @@
 <h1>Dashboard</h1>
 <form class="toolbar" method="GET"><input type="hidden" name="apply" value="1">
   <div class="f"><label>From</label><input type="date" name="from" value="{{ $from->toDateString() }}"></div><div class="f"><label>To</label><input type="date" name="to" value="{{ $to->toDateString() }}"></div>
-  <div class="f"><label style="font-weight:400"><input type="checkbox" name="demo" value="1" @checked($demo)> Include DEMO orders</label></div><button class="btn">Apply</button></form>
-@if($counts['demoOrders'] > 0)<div class="warn-box">Database contains <b>{{ $counts['demoOrders'] }}</b> seeded DEMO orders (not real purchases) and <b>{{ $counts['realOrders'] }}</b> real orders. Figures below {{ $demo ? 'INCLUDE demo data' : 'EXCLUDE demo data' }}.</div>@endif
+  <button class="btn">Apply</button></form>
 <div class="grid g4">
   <div class="card stat"><b>{{ money($summary['revenue']) }}</b><span>Revenue (net of refunds)</span></div><div class="card stat"><b>{{ $summary['orders'] }}</b><span>Orders counted as sales</span></div>
   <div class="card stat"><b>{{ $summary['units'] }}</b><span>Units sold</span></div><div class="card stat"><b>{{ money($summary['aov']) }}</b><span>Average order value</span></div></div>
@@ -22,5 +21,5 @@
   <div class="card"><h2>Low stock</h2><table><tbody>@forelse($lowStock as $p)<tr><td><a href="{{ route('admin.products.edit', $p) }}">{{ $p->name }}</a></td><td>{{ $p->stock_qty }} left</td></tr>@empty<tr><td>Nothing low.</td></tr>@endforelse</tbody></table></div>
 </div>
 <div class="card"><h2>Recent orders</h2><div class="tablewrap"><table><thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Payment</th><th>Total</th></tr></thead><tbody>
-@foreach($recent as $o)<tr><td><a href="{{ route('admin.orders.show', $o) }}">#{{ $o->order_number }}</a> @if($o->is_demo)<span class="pill demo">DEMO</span>@endif</td><td>{{ $o->placed_at?->format('M j, H:i') }}</td><td>{{ $o->statusLabel() }}</td><td>{{ $o->payment_status }}</td><td>{{ money($o->total) }}</td></tr>@endforeach</tbody></table></div></div>
+@foreach($recent as $o)<tr><td><a href="{{ route('admin.orders.show', $o) }}">#{{ $o->order_number }}</a></td><td>{{ $o->placed_at?->format('M j, H:i') }}</td><td>{{ $o->statusLabel() }}</td><td>{{ $o->payment_status }}</td><td>{{ money($o->total) }}</td></tr>@endforeach</tbody></table></div></div>
 @endsection

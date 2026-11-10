@@ -37,11 +37,11 @@ The platform modernizes an optical retail business into an end-to-end digital st
 - **Customer Portal:** Secure login, registration, profile management, and order history.
 
 ### 🛡️ Administrative Dashboard & Operations
-- **Multi-Role Access Control (RBAC):**
-  - `super_admin`: Full administrative control, system settings, activity logs, user management.
-  - `store_manager`: Inventory, products, orders, coupons, customer management.
-  - `content_manager`: Banners, hero slides, promotional sections, FAQs, CMS pages.
-  - `order_support`: Processing orders, shipments, customer inquiries.
+- **Administrator Control Panel:**
+  - Full management of products, eyewear catalog, categories, and inventory.
+  - Live order processing, customer records, and invoices.
+  - Coupon creation, sales reports, customer inquiries, and reviews.
+  - Website content customization (hero banners, brand collages, FAQs, and store policies).
 - **Inventory Management:** Stock tracking with low-stock alerts and automatic order release on payment expiry.
 - **Order Processing:** Lifecycle tracking (`pending`, `paid`, `shipped`, `delivered`, `cancelled`, `refunded`).
 - **Store Configuration:** Announcement ticker, social links, tax rates, shipping rates, and API keys.
@@ -92,7 +92,7 @@ DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-### 3. Database Migration & Demo Data Seeding
+### 3. Database Migration & Store Setup
 ```bash
 mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS jb_optician CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 php artisan migrate --seed
@@ -108,19 +108,13 @@ php artisan serve
 
 ---
 
-## 🔐 Default Demo Credentials (Local Development)
+## 🔐 Store Administrator Credentials
 
 | Role | Username | Email | Password |
 |---|---|---|---|
 | **Super Admin** | `admin` | `admin@gmail.com` | `admin` |
-| **Store Manager** | `manager` | `manager@jboptician.test` | `admin` |
-| **Content Manager** | `content` | `content@jboptician.test` | `admin` |
-| **Customer** | `customer` | `customer@jboptician.test` | `admin` |
 
-To create a new custom admin account:
-```bash
-php artisan jbo:create-admin admin@yourdomain.com --name="Administrator" --role=super_admin
-```
+*(Customer accounts are registered directly by genuine buyers through the store's customer registration portal).*
 
 ---
 

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('title','Order #'.$order->order_number)
 @section('content')
-<h1>Order #{{ $order->order_number }} @if($order->is_demo)<span class="pill demo">DEMO — not a real purchase</span>@endif</h1>
+<h1>Order #{{ $order->order_number }}</h1>
 <div class="grid g2" style="grid-template-columns:2fr 1fr;align-items:start"><div>
   <div class="card"><h2>Items</h2><div class="tablewrap"><table><thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Refunded</th><th>Total</th></tr></thead><tbody>
     @foreach($order->items as $i)<tr><td>{{ $i->name }}@if($i->variant_label) ({{ $i->variant_label }})@endif<div class="hint">{{ $i->sku }}</div></td><td>{{ money($i->unit_price) }}</td><td>{{ $i->qty }}</td><td>{{ $i->refunded_qty }}</td><td>{{ money($i->line_total) }}</td></tr>@endforeach

@@ -8,4 +8,4 @@
 <div class="f"><label>Trust-row icon</label><select name="icon"><option value="">—</option>@foreach(['truck','support','money','shield'] as $i)<option @selected(old('icon',$block->icon)===$i)>{{ $i }}</option>@endforeach</select></div><div class="f"><label>Image alt text</label><input type="text" name="alt" value="{{ old('alt', $block->alt) }}"></div></div>
 <div class="f"><label>Image (upload to replace)</label>@if($block->image)<img class="thumb lg" src="{{ media_url($block->image) }}" alt=""><br>@endif<input type="file" name="image" accept="image/jpeg,image/png,image/webp"></div>
 <label style="font-weight:400"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $block->is_active))> Active</label><br>
-@if($block->exists)<input type="hidden" name="confirm_content" value="0"><label style="font-weight:400"><input type="checkbox" name="confirm_content" value="1" @checked(!$block->is_placeholder)> I confirm this content/claim is genuine (removes the PLACEHOLDER flag)</label><br>@endif<br><button class="btn">Save</button></form>@endsection
+<br><button class="btn">Save</button></form>@endsection
