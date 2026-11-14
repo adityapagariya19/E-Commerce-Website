@@ -1,9 +1,9 @@
 @extends('layouts.store')
 @section('title', 'Try On – '.setting('store_name', 'JB Optician'))
 @section('content')
-<div class="wrap" style="padding-bottom:30px">
-  <h1 class="page-title">Try On</h1>
-  <p style="text-align:center;font-size:12px;color:var(--muted)">Virtual try-on uses your device camera. Allow camera access when your browser asks.</p>
+<div class="wrap" style="max-width:860px;margin:0 auto;padding-bottom:50px">
+  <h1 class="page-title" style="margin-top:30px">Try On</h1>
+  <p style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:30px">Virtual try-on uses your device camera. Allow camera access when your browser asks.</p>
   @forelse($products as $p)
   <div class="tryon-row">
     <a href="{{ route('product', $p) }}">{!! picture($p->images->first()?->path, $p->name, 'thumb', ['loading' => 'lazy']) !!}</a>

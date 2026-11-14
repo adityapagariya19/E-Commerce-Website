@@ -12,7 +12,7 @@ use Illuminate\Validation\Rules\Password;
 class AdminUserController extends Controller
 {
     public function index() { return view('admin.users.index', ['users' => User::where('role', '!=', 'customer')->orderBy('name')->get()]); }
-    public function create() { return view('admin.users.form', ['user' => new User(['is_active' => true, 'role' => 'store_manager'])]); }
+    public function create() { return view('admin.users.form', ['user' => new User(['is_active' => true, 'role' => 'super_admin'])]); }
     public function edit(User $user) { abort_if($user->role === 'customer', 404); return view('admin.users.form', compact('user')); }
 
     public function store(Request $request)
@@ -38,7 +38,7 @@ class AdminUserController extends Controller
             return back()->with('error', 'You cannot deactivate or change the role of your own account.');
         }
         if ($user->role === 'super_admin' && ($d['role'] !== 'super_admin' || ! $active) && User::where('role', 'super_admin')->where('is_active', true)->where('id', '!=', $user->id)->doesntExist()) {
-            return back()->with('error', 'At least one active super administrator is required.');
+            return back()->with('error', 'At least one active admin is required.');
         }
         $user->fill(['name' => $d['name'], 'email' => $d['email'], 'role' => $d['role'], 'is_active' => $active]);
         if (! empty($d['password'])) { $user->password = $d['password']; }

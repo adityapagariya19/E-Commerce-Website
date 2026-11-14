@@ -30,13 +30,25 @@ class ImageUploader
         return $rel.'/'.$filename;
     }
 
-    /** Deletes the image and its WebP/thumbnail twins. Only ever touches files under uploads/. */
+    /** Deletes the image and any legacy twin/thumbnail variants. Only ever touches files under uploads/. */
     public static function delete(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'uploads/') || str_contains($path, '..')) {
+        if (! $path || str_contains($path, '..')) {
             return;
         }
-        Storage::disk('public')->delete(ImageProcessor::allPaths($path));
+
+        // Clean & normalize path: strip leading slashes and any leading 'storage/'
+        $clean = preg_replace('#^/?(storage/)?#', '', trim($path));
+
+        if (! str_starts_with($clean, 'uploads/')) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+        $disk->delete(ImageProcessor::allPaths($clean));
+        if ($disk->exists($clean)) {
+            $disk->delete($clean);
+        }
     }
 
     public static function replace(?UploadedFile $file, ?string $old, string $dir): ?string

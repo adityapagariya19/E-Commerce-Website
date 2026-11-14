@@ -4,7 +4,19 @@
 <script>try{var t=localStorage.getItem('jbo-admin-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head>
 <body><div class="shell">
 @php($u = auth()->user())
-<aside class="side"><a class="brand" href="{{ route('admin.dashboard') }}">JB Optician</a>
+<aside class="side">
+  <a class="admin-logo" href="{{ route('admin.dashboard') }}" aria-label="JB Optician Dashboard">
+    <span class="admin-logo__mark">JB</span>
+    <div class="admin-logo__text">
+      <svg class="admin-logo__svg" viewBox="0 0 70 26" aria-hidden="true">
+        <circle cx="20" cy="13" r="3" fill="#3b82f6"/>
+        <path d="M2 13 Q20 -2 38 13 Q20 28 2 13Z" fill="none" stroke="#3b82f6" stroke-width="2.2"/>
+        <path d="M40 6 Q58 2 68 13 Q58 24 40 20" fill="none" stroke="#3b82f6" stroke-width="2.2"/>
+      </svg>
+      <span class="admin-logo__word">OPTICIAN</span>
+      <span class="admin-logo__tag">YOUR VISION OUR MISSION</span>
+    </div>
+  </a>
   @if($u->hasPermission('dashboard'))<a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'on' : '' }}">Dashboard</a>@endif
   @if($u->hasPermission('products'))<h6>Catalogue</h6><a href="{{ route('admin.products.index') }}" class="{{ request()->routeIs('admin.products.*') ? 'on' : '' }}">Products</a><a href="{{ route('admin.reviews.index') }}" class="{{ request()->routeIs('admin.reviews.*') ? 'on' : '' }}">Reviews</a>@endif
   @if($u->hasPermission('catalog'))<a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'on' : '' }}">Categories</a><a href="{{ route('admin.brands.index') }}" class="{{ request()->routeIs('admin.brands.*') ? 'on' : '' }}">Brands</a>@endif

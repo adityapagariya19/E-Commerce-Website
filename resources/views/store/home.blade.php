@@ -4,7 +4,7 @@
 <section class="hero" data-hero aria-roledescription="carousel" aria-label="Featured">
   <div class="hero__track">
     @foreach($slides as $s)
-    <div class="hero__slide" role="group" aria-roledescription="slide" aria-label="{{ $loop->iteration }} of {{ $loop->count }}">
+    <div class="hero__slide {{ $loop->first ? 'is-active' : '' }}" role="group" aria-roledescription="slide" aria-label="{{ $loop->iteration }} of {{ $loop->count }}">
       <picture>
         @if($s->mobile_image)@if($w = media_webp($s->mobile_image))<source media="(max-width:700px)" type="image/webp" srcset="{{ $w }}">@endif<source media="(max-width:700px)" srcset="{{ media_url($s->mobile_image) }}">@endif
         @if($w = media_webp($s->image))<source type="image/webp" srcset="{{ $w }}">@endif
@@ -19,10 +19,6 @@
     </div>
     @endforeach
   </div>
-  @if($slides->count() > 1)
-  <button class="hero__nav hero__nav--prev" aria-label="Previous slide">‹</button><button class="hero__nav hero__nav--next" aria-label="Next slide">›</button>
-  <div class="hero__dots">@foreach($slides as $s)<button aria-label="Go to slide {{ $loop->iteration }}" aria-current="{{ $loop->first ? 'true' : 'false' }}"></button>@endforeach</div>
-  @endif
 </section>
 @endif
 

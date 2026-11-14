@@ -39,23 +39,77 @@
   $$('[data-qty]').forEach(w => { const i = $('input', w); $$('button', w).forEach(b => b.addEventListener('click', () => { i.value = Math.max(1, (+i.value || 1) + (b.dataset.step === '+' ? 1 : -1)); i.dispatchEvent(new Event('change', { bubbles: true })); })); });
   $$('[data-autosubmit]').forEach(i => i.addEventListener('change', () => i.form.submit()));
 
-  /* hero carousel */
+  /* hero carousel: smooth cinematic cross-fade + continuous auto-switch (no sliding, no dots) */
   const hero = $('[data-hero]');
   if (hero) {
-    const track = $('.hero__track', hero), slides = $$('.hero__slide', hero), dots = $$('.hero__dots button', hero);
-    let i = 0, timer, paused = false;
-    const go = n => { i = (n + slides.length) % slides.length; track.style.transform = `translateX(-${i * 100}%)`; dots.forEach((d, k) => d.setAttribute('aria-current', k === i)); slides.forEach((s, k) => s.setAttribute('aria-hidden', k !== i)); };
-    const start = () => { stop(); if (slides.length > 1 && !matchMedia('(prefers-reduced-motion:reduce)').matches) timer = setInterval(() => { if (!paused) go(i + 1); }, 5500); };
-    const stop = () => clearInterval(timer);
+    const slides = $$('.hero__slide', hero), dots = $$('.hero__dots button', hero);
+    let i = 0, timer = null;
+
+    const go = n => {
+      if (!slides.length) return;
+      i = (n + slides.length) % slides.length;
+      dots.forEach((d, k) => d.setAttribute('aria-current', k === i));
+      slides.forEach((s, k) => {
+        s.setAttribute('aria-hidden', k !== i);
+        if (k === i) {
+          s.classList.add('is-active');
+          const img = $('img.bg', s);
+          if (img) {
+            img.style.animation = 'none';
+            img.offsetHeight; /* trigger reflow to cleanly re-play Ken Burns zoom */
+            img.style.animation = '';
+          }
+        } else {
+          s.classList.remove('is-active');
+        }
+      });
+    };
+
+    const next = () => go(i + 1);
+
+    const start = () => {
+      stop();
+      if (slides.length > 1) {
+        timer = setInterval(next, 4500);
+      }
+    };
+
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+
     dots.forEach((d, k) => d.addEventListener('click', () => { go(k); start(); }));
     $('.hero__nav--prev', hero) && $('.hero__nav--prev', hero).addEventListener('click', () => { go(i - 1); start(); });
     $('.hero__nav--next', hero) && $('.hero__nav--next', hero).addEventListener('click', () => { go(i + 1); start(); });
-    hero.addEventListener('mouseenter', () => paused = true); hero.addEventListener('mouseleave', () => paused = false);
-    hero.addEventListener('focusin', () => paused = true); hero.addEventListener('focusout', () => paused = false);
-    hero.setAttribute('tabindex', '0'); hero.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') { go(i - 1); start(); } if (e.key === 'ArrowRight') { go(i + 1); start(); } });
-    let x0 = null; hero.addEventListener('touchstart', e => x0 = e.touches[0].clientX, { passive: true });
-    hero.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1)); start(); } x0 = null; });
-    go(0); start();
+
+    // Keyboard navigation
+    hero.setAttribute('tabindex', '0');
+    hero.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') { go(i - 1); start(); }
+      if (e.key === 'ArrowRight') { go(i + 1); start(); }
+    });
+
+    // Touch swipe support
+    let x0 = null;
+    hero.addEventListener('touchstart', e => x0 = e.touches[0].clientX, { passive: true });
+    hero.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1)); start(); }
+      x0 = null;
+    });
+
+    // Pause on background tabs, resume on visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    go(0);
+    start();
   }
 
   /* product row carousels */

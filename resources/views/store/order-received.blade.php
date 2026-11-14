@@ -1,7 +1,14 @@
 @extends('layouts.store')
 @section('title', 'Order received – '.setting('store_name', 'JB Optician'))
+@push('head')
+<meta http-equiv="refresh" content="5;url={{ auth()->check() ? route('account.orders') : route('shop') }}">
+@endpush
 @section('content')
 <div class="wrap" style="max-width:860px;padding-bottom:40px">
+  <div style="background:#eaf2fd;border:1px solid #c3dbfc;color:#0d47a1;border-radius:10px;padding:12px 18px;margin:20px 0 16px;display:flex;align-items:center;justify-content:space-between;font-size:13.5px">
+    <span>✓ <b>Order Placed Successfully!</b> Redirecting to {{ auth()->check() ? 'your orders' : 'all products' }} in <strong id="redirect-sec">5</strong> seconds...</span>
+    <a href="{{ auth()->check() ? route('account.orders') : route('shop') }}" style="color:#0d47a1;font-weight:600;text-decoration:underline">Go now →</a>
+  </div>
   @php($paid = in_array($order->payment_status, ['paid','partially_refunded','refunded']))
   @if($order->payment_method === 'cod')<div class="success-box">Thank you. Your order has been received and will be paid in cash on delivery.</div>
   @elseif($paid)<div class="success-box">Thank you for shopping with us. Your account has been charged and your transaction is successful. We will be processing your order soon.</div>
@@ -21,4 +28,19 @@
     @foreach(['billing' => 'Billing address', 'shipping' => 'Shipping address'] as $k => $label)@php($a = $order->{$k})<div><h3 style="font-style:normal;font-weight:500;margin:0 0 8px">{{ $label }}</h3>{{ $a['first_name'] ?? '' }} {{ $a['last_name'] ?? '' }}<br>{{ $a['line1'] ?? '' }}@if(!empty($a['line2']))<br>{{ $a['line2'] }}@endif<br>{{ $a['city'] ?? '' }} {{ $a['postcode'] ?? '' }}<br>{{ $a['state'] ?? '' }}</div>@endforeach
   </div>
 </div>
+<script>
+  (function() {
+    var sec = 5;
+    var el = document.getElementById('redirect-sec');
+    var target = "{{ auth()->check() ? route('account.orders') : route('shop') }}";
+    var t = setInterval(function() {
+      sec--;
+      if (el) el.textContent = sec;
+      if (sec <= 0) {
+        clearInterval(t);
+        window.location.href = target;
+      }
+    }, 1000);
+  })();
+</script>
 @endsection

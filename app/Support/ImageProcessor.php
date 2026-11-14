@@ -100,7 +100,9 @@ class ImageProcessor
         if ($w <= $maxW) {
             return $img;
         }
-        $scaled = imagescale($img, $maxW, -1, IMG_BICUBIC);
+        $h = imagesy($img);
+        $newH = (int) round($h * ($maxW / $w));
+        $scaled = imagescale($img, $maxW, $newH);
         if ($scaled) {
             imagealphablending($scaled, false);
             imagesavealpha($scaled, true);

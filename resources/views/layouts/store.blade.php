@@ -69,10 +69,9 @@
           @if(setting('social_youtube'))<a href="{{ setting('social_youtube') }}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#111"/><path d="M10 9l5 3-5 3z" fill="#fff"/></svg></a>@endif
         </div></div>
       <div><h5>Follow Us</h5><ul>
-        @if(setting('social_instagram'))<li><a href="{{ setting('social_instagram') }}" target="_blank" rel="noopener">Instagram</a></li>@endif
-        @if(setting('social_facebook'))<li><a href="{{ setting('social_facebook') }}" target="_blank" rel="noopener">Facebook</a></li>@endif
-        @if(setting('social_youtube'))<li><a href="{{ setting('social_youtube') }}" target="_blank" rel="noopener">Youtube</a></li>@endif
-        @if(!setting('social_instagram') && !setting('social_facebook') && !setting('social_youtube'))<li>Social links: set in Admin › Settings</li>@endif
+        <li><a href="{{ setting('social_instagram') ?: 'https://instagram.com/' }}" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="{{ setting('social_facebook') ?: 'https://facebook.com/' }}" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="{{ setting('social_youtube') ?: 'https://youtube.com/' }}" target="_blank" rel="noopener">Youtube</a></li>
       </ul></div>
       <div><h5>Support</h5><ul>
         <li><a href="{{ route('contact') }}">Contact Us</a></li><li><a href="{{ route('help') }}">Help Center</a></li><li><a href="{{ route('page', 'privacy-policy') }}">Privacy Policy</a></li>

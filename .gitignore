@@ -11,5 +11,7 @@
 !/storage/framework/cache/data/.gitkeep
 !/storage/framework/views/.gitkeep
 *.sqlite
+*.mp4
+*.zip
 tools/.adminer/
 tools/adminer-*.php

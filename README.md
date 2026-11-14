@@ -112,7 +112,7 @@ php artisan serve
 
 | Role | Username | Email | Password |
 |---|---|---|---|
-| **Super Admin** | `admin` | `admin@gmail.com` | `admin` |
+| **Admin** | `admin` | `admin@gmail.com` | `admin` |
 
 *(Customer accounts are registered directly by genuine buyers through the store's customer registration portal).*
 
