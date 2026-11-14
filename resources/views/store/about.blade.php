@@ -1,33 +1,122 @@
 @extends('layouts.store')
 @section('title', 'About Us – '.setting('store_name', 'JB Optician'))
 @section('content')
-<div class="wrap about prose" style="max-width:var(--wrap);margin:0 auto;padding:40px 24px 60px">
-  <h1 style="font-size:36px;font-weight:700;margin:0 0 24px;color:var(--ink)">About <span style="color:var(--blue)">{{ setting('store_name', 'JB Optician') }}</span></h1>
-  
-  <div style="font-size:15.5px;line-height:1.8;color:#333;max-width:960px">
-    {!! \Illuminate\Support\Str::markdown((string) ($page->body ?? "Welcome to **JB Optician**, where your vision is our mission. We specialize in high-quality eyewear, advanced lenses, and professional eye care services to meet your needs.\n\nOur store offers a wide variety of stylish frames, premium lenses, and modern contact lenses for all age groups. Our experienced staff and latest technology guarantee precision and comfort in every product.\n\nCustomer satisfaction is our top priority, and we strive to provide the best service in the industry."), ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
+<div class="wrap" style="padding:40px 20px 60px">
+  {{-- Header Banner --}}
+  <div style="text-align:center;max-width:780px;margin:0 auto 44px">
+    <p style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin:0 0 8px">EXCELLENCE IN EYECARE & EYEWEAR</p>
+    <h1 style="font-size:clamp(28px, 3.8vw, 40px);font-weight:700;margin:0 0 14px;color:var(--ink);line-height:1.2">
+      About <span style="color:var(--blue)">{{ setting('store_name', 'JB Optician') }}</span>
+    </h1>
+    <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:0">
+      Your vision is our mission. Dedicated to delivering precision lenses, iconic designer frames, and professional optical care to empower your perspective.
+    </p>
   </div>
 
-  <div style="margin-top:40px;border-top:1px solid var(--line);padding-top:32px">
-    <h2 style="font-size:26px;font-weight:700;margin:0 0 14px;color:var(--ink)">Visit Our Store</h2>
-    <p style="font-size:15px;line-height:1.7;color:#333;margin:0 0 20px;max-width:860px">
-      <b>Address:</b> {{ setting('store_address', 'Shop 1, Matrutva Maternity & Nursing Hospital, Colony, Ulkanagari Rd, near Omkareshwar Mandir, Garkheda Area, Chhatrapati Sambhajinagar, Maharashtra 431005') }}
-    </p>
+  {{-- 2-Column Story & Values Grid --}}
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start;margin-bottom:56px" class="about-grid">
+    <div>
+      <h2 style="font-size:22px;font-weight:700;color:var(--ink);margin:0 0 16px;line-height:1.3">Our Commitment to Quality Vision</h2>
+      <div style="font-size:15px;line-height:1.8;color:#444">
+        <p style="margin:0 0 14px">Welcome to <b>JB Optician</b>, where your vision is our mission. We specialize in high-quality eyewear, advanced lenses, and professional eye care services to meet your needs.</p>
+        <p style="margin:0 0 14px">Our store offers a wide variety of stylish frames, premium lenses, and modern contact lenses for all age groups. Our experienced staff and latest technology guarantee precision and comfort in every product.</p>
+        <p style="margin:0 0 20px">Customer satisfaction is our top priority, and we strive to provide the best service in the industry with personalized consultations and computerized lens testing.</p>
+      </div>
 
-    @if(setting('map_embed_url'))
-      <iframe class="map" src="{{ setting('map_embed_url') }}" style="width:100%;height:420px;border-radius:12px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(0,0,0,.04);display:block;margin:24px 0" title="JB Optician Store Location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-    @else
-      <div class="map" style="display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;border-radius:12px;border:1px solid var(--line);margin:24px 0">
-        <div>
-          <p style="margin:0 0 10px;color:var(--muted)">Matrutva Maternity & Nursing Hospital, Ulkanagari Rd, Chhatrapati Sambhajinagar</p>
-          <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">Open in Google Maps ↗</a>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:24px">
+        <div style="flex:1;min-width:130px;background:#f8f9fc;border:1px solid #e5e9f2;border-radius:10px;padding:16px;text-align:center">
+          <b style="display:block;font-size:24px;color:var(--blue);font-weight:700">500+</b>
+          <span style="font-size:12px;color:var(--muted);font-weight:500">Eyewear Styles</span>
+        </div>
+        <div style="flex:1;min-width:130px;background:#f8f9fc;border:1px solid #e5e9f2;border-radius:10px;padding:16px;text-align:center">
+          <b style="display:block;font-size:24px;color:var(--blue);font-weight:700">100%</b>
+          <span style="font-size:12px;color:var(--muted);font-weight:500">Authentic Lenses</span>
+        </div>
+        <div style="flex:1;min-width:130px;background:#f8f9fc;border:1px solid #e5e9f2;border-radius:10px;padding:16px;text-align:center">
+          <b style="display:block;font-size:24px;color:var(--blue);font-weight:700">4.9★</b>
+          <span style="font-size:12px;color:var(--muted);font-weight:500">Customer Rating</span>
         </div>
       </div>
-    @endif
+    </div>
 
-    <div style="margin-top:20px;background:#f9f9fb;border:1px solid var(--line);border-radius:10px;padding:18px 24px;display:inline-flex;flex-direction:column;gap:4px">
-      <p style="margin:0;font-size:15px"><b>Contact Us:</b> <a href="tel:{{ setting('store_phone', '+919762759028') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9762759028') }}</a></p>
-      <p style="margin:0;color:var(--muted);font-size:13.5px">For appointments or frame inquiries, visit our store or reach out directly.</p>
+    {{-- Highlight Cards --}}
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.03);display:flex;gap:14px;align-items:flex-start">
+        <div style="width:40px;height:40px;border-radius:8px;background:#eef4ff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👓</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;margin:0 0 4px;color:var(--ink)">Curated Eyewear Styles</h3>
+          <p style="font-size:13px;color:var(--muted);margin:0;line-height:1.5">Handpicked international & trending Indian frames crafted with durable, ultra-lightweight materials.</p>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.03);display:flex;gap:14px;align-items:flex-start">
+        <div style="width:40px;height:40px;border-radius:8px;background:#eef4ff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔬</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;margin:0 0 4px;color:var(--ink)">Advanced Lens Coatings</h3>
+          <p style="font-size:13px;color:var(--muted);margin:0;line-height:1.5">Anti-reflective, blue-cut screen protection, UV400 filters, and custom progressive focal lenses.</p>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.03);display:flex;gap:14px;align-items:flex-start">
+        <div style="width:40px;height:40px;border-radius:8px;background:#eef4ff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👨‍⚕️</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;margin:0 0 4px;color:var(--ink)">Personalized Eye Consultation</h3>
+          <p style="font-size:13px;color:var(--muted);margin:0;line-height:1.5">Expert opticians to help you select the exact frame shape and lens specifications for your facial structure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Visit Our Store & Location (Balanced Card Layout) --}}
+  <div style="background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.04);overflow:hidden">
+    <div style="padding:24px 30px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+      <div>
+        <h2 style="font-size:20px;font-weight:700;margin:0 0 4px;color:var(--ink)">Visit Our Retail Store</h2>
+        <p style="font-size:13.5px;color:var(--muted);margin:0">Experience our frames in person and receive on-the-spot eye testing.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn--sm" href="tel:{{ setting('store_phone', '+919762759028') }}" style="background:var(--blue);color:#fff">📞 Call {{ setting('store_phone', '+91 9762759028') }}</a>
+        <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">📍 Get Directions ↗</a>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:360px 1fr;align-items:stretch" class="store-grid">
+      <div style="padding:28px 30px;background:#fafafc;display:flex;flex-direction:column;justify-content:center;gap:20px;border-right:1px solid var(--line)">
+        <div>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--blue);text-transform:uppercase">OUR ADDRESS</span>
+          <p style="font-size:13.5px;line-height:1.6;color:#333;margin:6px 0 0">
+            {{ setting('store_address', 'Shop 1, Matrutva Maternity & Nursing Hospital, Colony, Ulkanagari Rd, near Omkareshwar Mandir, Garkheda Area, Chhatrapati Sambhajinagar, Maharashtra 431005') }}
+          </p>
+        </div>
+
+        <div>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--blue);text-transform:uppercase">DIRECT CONTACT</span>
+          <p style="font-size:13.5px;color:#333;margin:6px 0 0">
+            <b>Phone:</b> <a href="tel:{{ setting('store_phone', '+919762759028') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9762759028') }}</a>
+          </p>
+        </div>
+
+        <div>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--blue);text-transform:uppercase">STORE HOURS</span>
+          <p style="font-size:13px;color:#444;margin:6px 0 0;line-height:1.5">
+            Mon – Sat: 10:00 AM – 9:00 PM<br>
+            Sunday: 10:00 AM – 8:00 PM
+          </p>
+        </div>
+      </div>
+
+      <div style="min-height:380px;height:100%">
+        @if(setting('map_embed_url'))
+          <iframe class="map" src="{{ setting('map_embed_url') }}" style="width:100%;height:100%;min-height:380px;border:0;display:block" title="Store location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        @else
+          <div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:380px;background:#f0f2f7;padding:24px;text-align:center">
+            <div>
+              <p style="font-size:14px;color:var(--muted);margin:0 0 12px">Shop 1, Matrutva Maternity & Nursing Hospital, Ulkanagari Rd</p>
+              <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">Open in Google Maps ↗</a>
+            </div>
+          </div>
+        @endif
+      </div>
     </div>
   </div>
 </div>

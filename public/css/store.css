@@ -328,6 +328,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .card-form{max-width:760px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 2px 14px rgba(0,0,0,.08);padding:28px}
 .band{background:#f8f8f9;padding:36px 0}
 .map{width:100%;height:380px;border:0;background:#e9edf3}
+@media (max-width:860px){
+  .about-grid, .store-grid, .contact-grid{grid-template-columns:1fr !important;gap:24px !important}
+  .store-grid > div:first-child{border-right:0 !important;border-bottom:1px solid var(--line)}
+}
 .help h2{font-size:22px;font-weight:500;margin:22px 0 8px}.help a.q{display:block;color:#0d6efd;margin:6px 0;font-size:14px;cursor:pointer}.help .ans{display:none;background:#f6f8ff;border-left:3px solid var(--blue);padding:10px 14px;margin:2px 0 10px;font-size:13.5px}.help .ans.open{display:block}
 .help .search{width:100%;border:1px solid #ccc;border-radius:4px;padding:8px 10px;margin:14px 0}
 .topics a{display:block;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px}.topics a:hover{background:#e9ecef}
