@@ -66,7 +66,7 @@
       @endif
     </div>
     <div class="toast-popup__body">
-      <div class="toast-popup__title">{{ session('success') ? 'Message Sent' : 'Notice' }}</div>
+      <div class="toast-popup__title">{{ session('success') ? 'Message Sent Successfully' : 'Notice' }}</div>
       <p class="toast-popup__msg">{{ session('success') ?: session('error') }}</p>
     </div>
     <button type="button" class="toast-popup__close" onclick="dismissFlashToast()" aria-label="Close notification">✕</button>
