@@ -18,7 +18,7 @@ class SettingsSeeder extends Seeder
             'store_email' => 'info@jboptician.com',
             'contact_recipient' => 'info@jboptician.com',
             'store_hours' => '10:00 AM – 9:30 PM (Mon – Sun)',
-            'map_embed_url' => 'https://maps.google.com/maps?q=Shop+1,+Matrutva+Maternity+%26+Nursing+Hospital,+Colony,+Ulkanagari+Rd,+near+Omkareshwar+Mandir,+Garkheda+Area,+Chhatrapati+Sambhajinagar,+Maharashtra+431005&t=&z=16&ie=UTF8&iwloc=&output=embed',
+            'map_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.253891226364!2d75.3397181!3d19.8714937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdba3980b02342d%3A0xa893b3f8d625ee38!2sJB%20OPTICIAN!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin',
             'social_instagram' => 'https://instagram.com/',
             'social_facebook' => 'https://facebook.com/',
             'social_youtube' => 'https://youtube.com/',

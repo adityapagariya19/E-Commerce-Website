@@ -79,7 +79,7 @@
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="btn btn--sm" href="tel:{{ setting('store_phone', '+919762759028') }}" style="background:var(--blue);color:#fff">📞 Call {{ setting('store_phone', '+91 9762759028') }}</a>
-        <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">📍 Get Directions ↗</a>
+        <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode('JB Optician, Chhatrapati Sambhajinagar') }}">📍 Get Directions ↗</a>
       </div>
     </div>
 
@@ -115,7 +115,7 @@
           <div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:380px;background:#f0f2f7;padding:24px;text-align:center">
             <div>
               <p style="font-size:14px;color:var(--muted);margin:0 0 12px">Shop 1, Matrutva Maternity &amp; Nursing Hospital, Ulkanagari Rd</p>
-              <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">Open in Google Maps ↗</a>
+              <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode('JB Optician, Chhatrapati Sambhajinagar') }}">Open in Google Maps ↗</a>
             </div>
           </div>
         @endif

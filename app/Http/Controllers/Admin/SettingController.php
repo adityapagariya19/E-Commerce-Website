@@ -14,7 +14,7 @@ class SettingController extends Controller
     private const PLAIN = [
         'store_name' => 'required|max:100', 'store_tagline' => 'nullable|max:150', 'store_email' => 'nullable|email|max:150', 'contact_recipient' => 'nullable|email|max:150',
         'store_phone' => 'nullable|max:30', 'store_address' => 'nullable|max:400', 'store_hours' => 'nullable|max:200',
-        'map_embed_url' => ['nullable', 'max:1000', 'regex:~^https://www\.google\.com/maps/embed\?~'],
+        'map_embed_url' => ['nullable', 'max:1000', 'regex:~^https://((www\.)?google\.com/maps/embed|maps\.google\.com/maps)\?~'],
         'social_instagram' => 'nullable|url|max:200', 'social_facebook' => 'nullable|url|max:200', 'social_youtube' => 'nullable|url|max:200',
         'announcements' => 'nullable|max:1000',
         'shipping_flat_rate' => 'nullable|numeric|min:0', 'shipping_free_threshold' => 'nullable|numeric|min:0', 'tax_rate' => 'nullable|numeric|min:0|max:100',

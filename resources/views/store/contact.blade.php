@@ -98,7 +98,7 @@
   <div style="background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.03)">
     <div style="padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <h3 style="font-size:16px;font-weight:600;margin:0;color:var(--ink)">Find Us on Google Maps</h3>
-      <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">Open in Google Maps ↗</a>
+      <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode('JB Optician, Chhatrapati Sambhajinagar') }}">Open in Google Maps ↗</a>
     </div>
     @if(setting('map_embed_url'))
       <iframe class="map" src="{{ setting('map_embed_url') }}" style="width:100%;height:380px;border:0;display:block" title="Store location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
@@ -106,7 +106,7 @@
       <div style="display:flex;align-items:center;justify-content:center;height:380px;background:#f0f2f7;padding:24px;text-align:center">
         <div>
           <p style="font-size:14px;color:var(--muted);margin:0 0 10px">Shop 1, Matrutva Maternity &amp; Nursing Hospital, Ulkanagari Rd</p>
-          <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode(setting('store_address', 'JB Optician Ulkanagari Sambhajinagar')) }}">Open in Google Maps ↗</a>
+          <a class="btn btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode('JB Optician, Chhatrapati Sambhajinagar') }}">Open in Google Maps ↗</a>
         </div>
       </div>
     @endif
