@@ -15,24 +15,24 @@ class ContentSeeder extends Seeder
     public function run(): void
     {
         if (! HeroSlide::exists()) {
-            HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'images/placeholders/hero-eye.svg',
+            HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'uploads/hero/d74f3c39-9f15-4dcc-a793-14cabaeeaca2.jpg',
                 'alt' => 'Contact lens on a fingertip', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 0, 'is_active' => true]);
-            HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'images/placeholders/hero-sunglasses.svg',
+            HeroSlide::create(['eyebrow' => 'Exclusively from JB Optician', 'kicker' => "WE'RE PROUD TO INTRODUCE", 'heading' => 'JB Optician a online store', 'image' => 'images/home/hero-sunglasses.jpg',
                 'alt' => 'Sunglasses Collection', 'cta_label' => 'SHOP WITH US', 'cta_url' => '/shop', 'position' => 1, 'is_active' => true]);
         }
 
         if (! HomeBlock::exists()) {
             $b = fn (array $a) => HomeBlock::create($a + ['is_active' => true, 'is_placeholder' => false]);
-            $b(['section' => 'collage', 'title' => 'John Jacobs × Squid Game 2', 'image' => 'images/placeholders/collage-1.svg', 'alt' => 'John Jacobs Special Edition', 'url' => '/product-category/john-jacobs', 'position' => 0]);
-            $b(['section' => 'collage', 'title' => 'Sunglasses for women', 'subtitle' => 'Trendy shades for every look', 'image' => 'images/placeholders/collage-2.svg', 'alt' => 'Sunglasses for women', 'url' => '/product-category/sunglasses', 'position' => 1]);
-            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-3.svg', 'alt' => 'Men Eyewear Collection', 'url' => '/product-category/man', 'position' => 2]);
-            $b(['section' => 'collage', 'title' => null, 'image' => 'images/placeholders/collage-4.svg', 'alt' => 'Metal frame glasses', 'url' => '/product-category/spectacle-frames', 'position' => 3]);
-            $b(['section' => 'promo', 'title' => 'Build up your spectacle today with JB Optician™', 'subtitle' => 'A new revolution. A new perspective.', 'cta_label' => 'SHOP NOW', 'url' => '/shop', 'image' => 'images/placeholders/promo-shopfront.svg', 'alt' => 'JB Optician Store']);
+            $b(['section' => 'collage', 'title' => 'John Jacobs × Squid Game 2', 'image' => 'images/home/collage-1.jpg', 'alt' => 'John Jacobs Special Edition', 'url' => '/product-category/john-jacobs', 'position' => 0]);
+            $b(['section' => 'collage', 'title' => 'Sunglasses for women', 'subtitle' => 'Trendy shades for every look', 'image' => 'images/home/collage-2.jpg', 'alt' => 'Sunglasses for women', 'url' => '/product-category/sunglasses', 'position' => 1]);
+            $b(['section' => 'collage', 'title' => null, 'image' => 'images/home/collage-3.jpg', 'alt' => 'Men Eyewear Collection', 'url' => '/product-category/man', 'position' => 2]);
+            $b(['section' => 'collage', 'title' => null, 'image' => 'images/home/collage-4.jpg', 'alt' => 'Metal frame glasses', 'url' => '/product-category/spectacle-frames', 'position' => 3]);
+            $b(['section' => 'promo', 'title' => 'Build up your spectacle today with JB Optician™', 'subtitle' => 'A new revolution. A new perspective.', 'cta_label' => 'SHOP NOW', 'url' => '/shop', 'image' => 'images/home/promo-shopfront.jpg', 'alt' => 'JB Optician Store']);
             $b(['section' => 'trust', 'title' => 'Free Shipping', 'subtitle' => 'On orders over ₹2000', 'icon' => 'truck', 'position' => 0]);
             $b(['section' => 'trust', 'title' => 'Dedicated Support', 'subtitle' => 'Quick response 24/7', 'icon' => 'support', 'position' => 1]);
             $b(['section' => 'trust', 'title' => 'Quality Guarantee', 'subtitle' => 'Certified optical products', 'icon' => 'money', 'position' => 2]);
             for ($i = 1; $i <= 5; $i++) {
-                $b(['section' => 'social', 'image' => "images/placeholders/social-{$i}.svg", 'alt' => "JB Optician Gallery {$i}", 'url' => null, 'position' => $i]);
+                $b(['section' => 'social', 'image' => "images/home/social-{$i}.jpg", 'alt' => "JB Optician Gallery {$i}", 'url' => null, 'position' => $i]);
             }
         }
 
