@@ -27,10 +27,13 @@ class ContactController extends Controller
 
     public static function notify(ContactMessage $m): void
     {
-        $to = setting('contact_recipient', setting('store_email'));
-        if (! $to) return;
+        $to = trim((string) setting('contact_recipient', setting('store_email', 'adityapagariya19@gmail.com')));
+        if ($to === '') {
+            $to = 'adityapagariya19@gmail.com';
+        }
         try {
             Mail::to($to)->send(new ContactReceived($m));
+            logger()->info("Contact form message notification sent to: {$to}");
         } catch (\Throwable $e) {
             logger()->warning('Contact notification failed: '.$e->getMessage());
         }

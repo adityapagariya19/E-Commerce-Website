@@ -42,7 +42,7 @@
             <div>
               <b style="font-size:13px;color:var(--ink);display:block;margin-bottom:2px">Email Support</b>
               <p style="font-size:13.5px;color:#444;margin:0">
-                <a href="mailto:{{ setting('store_email', 'jboptician@gmail.com') }}" style="color:var(--blue);font-weight:600">{{ setting('store_email', 'jboptician@gmail.com') }}</a>
+                <a href="mailto:{{ setting('store_email', 'adityapagariya19@gmail.com') }}" style="color:var(--blue);font-weight:600">{{ setting('store_email', 'adityapagariya19@gmail.com') }}</a>
               </p>
             </div>
           </div>
