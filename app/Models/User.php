@@ -39,5 +39,5 @@ class User extends Authenticatable
 
     public function orders(): HasMany { return $this->hasMany(Order::class); }
     public function addresses(): HasMany { return $this->hasMany(Address::class); }
-    public function roleLabel(): string { return config("permissions.roles.{$this->role}.label", 'Customer'); }
+    public function roleLabel(): string { return $this->isAdmin() ? 'Admin' : 'Customer'; }
 }

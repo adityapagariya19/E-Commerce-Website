@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class CreateAdmin extends Command
 {
     protected $signature = 'jbo:create-admin {email} {--name=Administrator} {--role=super_admin} {--password=}';
-    protected $description = 'Create (or reset) an admin user. Roles: super_admin, store_manager, content_manager, order_support.';
+    protected $description = 'Create (or reset) an admin user.';
 
     public function handle(): int
     {

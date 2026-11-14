@@ -54,7 +54,7 @@ class AdminUserController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
         if ($user->role === 'super_admin' && User::where('role', 'super_admin')->where('id', '!=', $user->id)->doesntExist()) {
-            return back()->with('error', 'At least one super administrator is required.');
+            return back()->with('error', 'At least one admin is required.');
         }
         ActivityLog::record('admin_user.deleted', $user, ['email' => $user->email]);
         $user->delete();

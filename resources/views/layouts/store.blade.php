@@ -8,7 +8,7 @@
 <meta name="description" content="@yield('description', 'JB Optician – eyeglasses, sunglasses, lenses and accessories.')">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/store.css') }}">
+<link rel="stylesheet" href="{{ asset('css/store.css') }}?v={{ filemtime(public_path('css/store.css')) }}">
 @stack('head')
 @php
   $ga = setting('ga4_measurement_id', config('services.ga4.measurement_id'));
@@ -118,7 +118,7 @@
   <button class="fab fab--chat" id="chat-open" aria-label="Open chat"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 5h16v11H9l-5 4z"/></svg></button>
   <div class="chat" id="chat" role="dialog" aria-label="Chat"><div class="chat__head"><span>{{ setting('store_name', 'JB Optician') }}</span><button data-chat-close style="background:none;border:0;color:#fff;cursor:pointer" aria-label="Close chat">✕</button></div><div class="chat__body" aria-live="polite"></div><form><input name="message" maxlength="300" placeholder="Message…" aria-label="Message" autocomplete="off"><button aria-label="Send">➤</button></form><div class="chat__foot">Help Centre search — not an AI assistant</div></div>
 @endif
-<script src="{{ asset('js/store.js') }}" defer></script>
+<script src="{{ asset('js/store.js') }}?v={{ filemtime(public_path('js/store.js')) }}" defer></script>
 @stack('scripts')
 </body>
 </html>

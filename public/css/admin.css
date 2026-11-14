@@ -4,13 +4,13 @@
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
 .side{background:var(--side);color:var(--side-ink);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
-.admin-logo{display:flex;align-items:center;gap:10px;padding:8px 10px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px;text-decoration:none}
+.admin-logo{display:flex;align-items:center;gap:10px;padding:12px 10px 18px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px;text-decoration:none}
 .admin-logo:hover{text-decoration:none}
-.admin-logo__mark{font-family:Georgia,serif;font-size:28px;font-weight:700;color:#fff;line-height:1}
-.admin-logo__text{display:flex;flex-direction:column;gap:1px}
-.admin-logo__svg{width:40px;height:15px;display:block}
-.admin-logo__word{font-size:11px;letter-spacing:.08em;color:#fff;font-weight:700;line-height:1;font-family:'Poppins',sans-serif}
-.admin-logo__tag{font-size:6.5px;letter-spacing:.04em;color:rgba(255,255,255,.6);line-height:1;margin-top:2px;font-family:'Poppins',sans-serif}
+.admin-logo__mark{font-family:Georgia,serif;font-size:32px;font-weight:700;color:#fff;line-height:1}
+.admin-logo__text{display:flex;flex-direction:column;gap:2px}
+.admin-logo__svg{width:50px;height:18px;display:block}
+.admin-logo__word{font-size:12px;letter-spacing:.08em;color:#fff;font-weight:700;line-height:1;font-family:'Poppins',sans-serif}
+.admin-logo__tag{font-size:6.5px;letter-spacing:.05em;color:#3b82f6;font-weight:600;line-height:1;margin-top:2px;font-family:'Poppins',sans-serif}
 .side .brand{font-family:Georgia,serif;font-size:22px;color:#fff;padding:6px 10px 16px;display:block}
 .side a{display:block;color:var(--side-ink);padding:9px 12px;border-radius:7px;font-size:13px;margin-bottom:2px}.side a:hover{background:#ffffff14;text-decoration:none}.side a.on{background:var(--accent);color:#fff}
 .side h6{margin:16px 12px 6px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7c8094}
