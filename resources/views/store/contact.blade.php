@@ -32,7 +32,7 @@
             <div>
               <b style="font-size:13px;color:var(--ink);display:block;margin-bottom:2px">Phone Support</b>
               <p style="font-size:13.5px;color:#444;margin:0">
-                <a href="tel:{{ setting('store_phone', '+919762759028') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9762759028') }}</a>
+                <a href="tel:{{ setting('store_phone', '+919876543210') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9876543210') }}</a>
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@
       </div>
 
       <div style="margin-top:24px">
-        <a class="btn btn--rect btn--block" href="tel:{{ setting('store_phone', '+919762759028') }}" style="background:var(--blue);color:#fff;text-align:center;padding:13px;border-radius:8px;font-weight:600;display:block">📞 Call Now: {{ setting('store_phone', '+91 9762759028') }}</a>
+        <a class="btn btn--rect btn--block" href="tel:{{ setting('store_phone', '+919876543210') }}" style="background:var(--blue);color:#fff;text-align:center;padding:13px;border-radius:8px;font-weight:600;display:block">📞 Call Now: {{ setting('store_phone', '+91 9876543210') }}</a>
       </div>
     </div>
 

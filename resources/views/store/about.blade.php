@@ -78,7 +78,7 @@
         <p style="font-size:13.5px;color:var(--muted);margin:0">Experience our frames in person and receive on-the-spot eye testing.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn btn--sm" href="tel:{{ setting('store_phone', '+919762759028') }}" style="background:var(--blue);color:#fff">📞 Call {{ setting('store_phone', '+91 9762759028') }}</a>
+        <a class="btn btn--sm" href="tel:{{ setting('store_phone', '+919876543210') }}" style="background:var(--blue);color:#fff">📞 Call {{ setting('store_phone', '+91 9876543210') }}</a>
         <a class="btn btn--sm btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode('JB Optician, Chhatrapati Sambhajinagar') }}">📍 Get Directions ↗</a>
       </div>
     </div>
@@ -95,7 +95,7 @@
         <div>
           <span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--blue);text-transform:uppercase">DIRECT CONTACT</span>
           <p style="font-size:14px;color:#333;margin:6px 0 0">
-            <b>Phone:</b> <a href="tel:{{ setting('store_phone', '+919762759028') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9762759028') }}</a>
+            <b>Phone:</b> <a href="tel:{{ setting('store_phone', '+919876543210') }}" style="color:var(--blue);font-weight:600">{{ setting('store_phone', '+91 9876543210') }}</a>
           </p>
         </div>
 

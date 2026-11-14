@@ -14,7 +14,7 @@ class SettingsSeeder extends Seeder
             'store_tagline' => 'Your vision is our mission',
             // Address read from the Google Maps card in the reference (Contact Us page).
             'store_address' => 'Shop 1, Matrutva Maternity & Nursing Hospital, Colony, Ulkanagari Rd, near Omkareshwar Mandir, Garkheda Area, Chhatrapati Sambhajinagar, Maharashtra 431005',
-            'store_phone' => '+91 9762759028',
+            'store_phone' => '+91 9876543210',
             'store_email' => 'info@jboptician.com',
             'contact_recipient' => 'info@jboptician.com',
             'store_hours' => '10:00 AM – 9:30 PM (Mon – Sun)',
