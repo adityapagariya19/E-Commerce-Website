@@ -55,8 +55,41 @@
   </div>
 </header>
 
-@if(session('success'))<div class="flash flash--ok" role="status">{{ session('success') }}</div>@endif
-@if(session('error'))<div class="flash flash--err" role="alert">{{ session('error') }}</div>@endif
+@if(session('success') || session('error'))
+<div class="toast-wrap" id="toast-wrap">
+  <div class="toast-popup toast-popup--{{ session('success') ? 'ok' : 'err' }}" id="flash-toast" role="status" aria-live="polite">
+    <div class="toast-popup__icon">
+      @if(session('success'))
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      @else
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      @endif
+    </div>
+    <div class="toast-popup__body">
+      <div class="toast-popup__title">{{ session('success') ? 'Message Sent' : 'Notice' }}</div>
+      <p class="toast-popup__msg">{{ session('success') ?: session('error') }}</p>
+    </div>
+    <button type="button" class="toast-popup__close" onclick="dismissFlashToast()" aria-label="Close notification">✕</button>
+    <div class="toast-popup__progress"></div>
+  </div>
+</div>
+<script>
+function dismissFlashToast(){
+  var t = document.getElementById('flash-toast');
+  var w = document.getElementById('toast-wrap');
+  if(!t) return;
+  t.classList.add('toast-popup--hiding');
+  setTimeout(function(){ if(w && w.parentNode) w.parentNode.removeChild(w); }, 350);
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var t = document.getElementById('flash-toast');
+  if(!t) return;
+  var timer = setTimeout(dismissFlashToast, 4500);
+  t.addEventListener('mouseenter', function(){ clearTimeout(timer); var p = t.querySelector('.toast-popup__progress'); if(p) p.style.animationPlayState = 'paused'; });
+  t.addEventListener('mouseleave', function(){ timer = setTimeout(dismissFlashToast, 2500); var p = t.querySelector('.toast-popup__progress'); if(p) p.style.animationPlayState = 'running'; });
+});
+</script>
+@endif
 
 <main id="content">@yield('content')</main>
 
