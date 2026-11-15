@@ -15,3 +15,6 @@
 *.zip
 tools/.adminer/
 tools/adminer-*.php
+
+.DS_Store
+*/.DS_Store
