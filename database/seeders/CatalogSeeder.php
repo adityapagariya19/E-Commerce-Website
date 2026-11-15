@@ -47,16 +47,16 @@ class CatalogSeeder extends Seeder
                 'images/products/repair-kit-3.jpg',
             ]],
             ['John Jacobs Transparent Full Rim Cat Eye with Premium Anti-Glare Lenses', 'John Jacobs', 3500, 2500, ['John Jacobs', 'Spectacle Frames', 'Spectacles'], 12, ['featured', 'tryon'], ['images/products/cat-eye.jpg']],
-            ['Aquacolor Candypack Misty Gray Zero Power Daily', 'Aquacolor', 179, null, ['Lens'], 80, [], ['images/products/aquacolor.jpg']],
-            ['VILLAIN WINGMAN BOTTLE OPENER SUNGLASSES', 'Villain', 599, null, ['Sunglasses', 'Man'], 15, [], ['images/products/villain-wingman.jpg']],
-            ['Vincent Chase Online Pink Full Rim Wayfarer', 'Vincent Chase', 800, null, ['Sunglasses'], 18, ['tryon'], ['images/products/vincent-chase-pink.jpg']],
+            ['Aquacolor Candypack Misty Gray Zero Power Daily', 'Aquacolor', 179, null, ['Lens'], 80, [], ['images/products/aquacolor.jpg', 'images/products/aquacolor-2.jpg']],
+            ['VILLAIN WINGMAN BOTTLE OPENER SUNGLASSES', 'Villain', 599, null, ['Sunglasses', 'Man'], 15, [], ['images/products/villain-wingman.jpg', 'images/products/villain-wingman-2.jpg', 'images/products/villain-wingman-3.jpg']],
+            ['Vincent Chase Online Pink Full Rim Wayfarer', 'Vincent Chase', 800, null, ['Sunglasses'], 18, ['tryon'], ['images/products/vincent-chase-pink.jpg', 'images/products/vincent-chase-pink-2.jpg']],
             ['Air Light Blue Square Eyeglasses (TR02MG4541-C6)', 'Air', 2199, 999, ['Spectacle Frames', 'Spectacles', 'Man'], 20, ['featured'], ['images/products/air-light-blue.jpg']],
-            ['Air Online Green Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 800, ['Spectacle Frames', 'Spectacles'], 22, ['featured', 'tryon'], ['images/products/air-green-round.jpg']],
-            ['Air Transparent Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 1500, ['Spectacle Frames', 'Spectacles'], 14, [], ['images/products/air-transparent-round.jpg']],
+            ['Air Online Green Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 800, ['Spectacle Frames', 'Spectacles'], 22, ['featured', 'tryon'], ['images/products/air-green-round.jpg', 'images/products/air-green-round-2.jpg']],
+            ['Air Transparent Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 1500, ['Spectacle Frames', 'Spectacles'], 14, [], ['images/products/air-transparent-round.jpg', 'images/products/air-transparent-round-2.jpg']],
             ['Apex Transparent Square Eyeglasses (V62005MG5369-C4)', 'Generic', null, null, ['Spectacle Frames', 'Man'], 0, [], ['images/products/air-transparent-round.jpg']],
-            ['Black & Silver Retro Square Sunglasses (MG2970-C1)', 'Generic', 3000, 2299, ['Sunglasses', 'Man'], 9, [], ['images/products/retro-square-sunglasses.jpg']],
-            ['John Jacobs Green Full Rim Wayfarer', 'John Jacobs', 4000, 2400, ['John Jacobs', 'Spectacles', 'Sunglasses'], 11, ['featured', 'tryon'], ['images/products/air-green-round.jpg']],
-            ['Pink Gradient Black Full Rim Wayfarer', 'Generic', 1800, null, ['Sunglasses'], 10, ['tryon'], ['images/products/vincent-chase-pink.jpg']],
+            ['Black & Silver Retro Square Sunglasses (MG2970-C1)', 'Generic', 3000, 2299, ['Sunglasses', 'Man'], 9, [], ['images/products/retro-square-sunglasses.jpg', 'images/products/retro-square-sunglasses-2.jpg']],
+            ['John Jacobs Green Full Rim Wayfarer', 'John Jacobs', 4000, 2400, ['John Jacobs', 'Spectacles', 'Sunglasses'], 11, ['featured', 'tryon'], ['images/products/air-green-round.jpg', 'images/products/air-green-round-2.jpg']],
+            ['Pink Gradient Black Full Rim Wayfarer', 'Generic', 1800, null, ['Sunglasses'], 10, ['tryon'], ['images/products/vincent-chase-pink.jpg', 'images/products/vincent-chase-pink-2.jpg']],
             ['Kids Flexi Round Frame', 'Generic', 1200, 999, ['Kids Spectacles', 'Spectacle Frames'], 16, [], ['images/products/air-green-round.jpg']],
         ];
 
@@ -90,7 +90,11 @@ class CatalogSeeder extends Seeder
         ]);
         if ($v->wasRecentlyCreated) {
             $v->categories()->sync([$cats['Sunglasses']->id]);
-            $v->images()->create(['path' => 'images/products/villain-wingman.jpg', 'alt' => $v->name, 'position' => 0]);
+            $v->images()->createMany([
+                ['path' => 'images/products/villain-wingman.jpg', 'alt' => $v->name, 'position' => 0],
+                ['path' => 'images/products/villain-wingman-2.jpg', 'alt' => $v->name.' - Angle View', 'position' => 1],
+                ['path' => 'images/products/villain-wingman-3.jpg', 'alt' => $v->name.' - Side Profile', 'position' => 2],
+            ]);
             $v->variants()->createMany([
                 ['label' => 'Medium', 'sku' => 'DEMO-VAR-001-M', 'price' => 1499, 'stock_qty' => 10, 'is_active' => true, 'options' => ['size' => 'Medium']],
                 ['label' => 'Large', 'sku' => 'DEMO-VAR-001-L', 'price' => 1599, 'sale_price' => 1399, 'stock_qty' => 6, 'is_active' => true, 'options' => ['size' => 'Large']],
