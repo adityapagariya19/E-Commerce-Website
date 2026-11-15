@@ -129,6 +129,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware('perm:settings')->group(function () {
             Route::get('settings', [A\SettingController::class, 'edit'])->name('settings.edit');
             Route::put('settings', [A\SettingController::class, 'update'])->name('settings.update');
+            Route::post('git-sync', [A\SettingController::class, 'gitSync'])->name('git.sync');
         });
         Route::middleware('perm:admin_users')->resource('users', A\AdminUserController::class)->except('show');
         Route::get('activity-log', [A\ActivityLogController::class, 'index'])->middleware('perm:activity_log')->name('activity.index');

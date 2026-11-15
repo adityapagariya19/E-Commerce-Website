@@ -46,4 +46,17 @@ class SettingController extends Controller
         ActivityLog::record('settings.updated'); // never log values
         return back()->with('success', 'Settings saved.');
     }
+
+    public function gitSync(Request $request)
+    {
+        $base = base_path();
+        $timestamp = now()->setTimezone('Asia/Kolkata')->format('d M Y, h:i A');
+        $msg = "chore(admin): sync updates and media to GitHub [{$timestamp}]";
+
+        $output = shell_exec("cd " . escapeshellarg($base) . " && git add -A && git commit -m " . escapeshellarg($msg) . " 2>&1 && git push origin main 2>&1");
+
+        ActivityLog::record('git.sync', null, null, ['output' => $output]);
+
+        return back()->with('success', "Changes successfully pushed to GitHub! ({$timestamp})");
+    }
 }
