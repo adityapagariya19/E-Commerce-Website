@@ -26,27 +26,41 @@ class CatalogSeeder extends Seeder
             $brands[$b] = Brand::firstOrCreate(['slug' => Str::slug($b)], ['name' => $b, 'is_active' => true]);
         }
 
-        // [name, brand, price, sale, categories, stock, flags(new,featured,tryon), imagePath, type]
+        // [name, brand, price, sale, categories, stock, flags(new,featured,tryon), images(array or string)]
         $rows = [
-            ['Equate Streak-Free Lens Cleaner 8 oz Spray Bottle', 'Generic', 169, 149, ['Accessories'], 40, ['new'], 'images/products/lens-cleaner.jpg'],
-            ['MR.Siga Microfiber Cleaning Cloths for Lens, Eyeglasses, Gray and Navy 6 Pack, 8 x 7 Inches', 'Generic', 499, 449, ['Accessories'], 60, ['new'], 'images/products/microfiber-cloths.jpg'],
-            ['Voyage Folding Spectacle Case', 'Voyage', 199, null, ['Accessories'], 25, ['new'], 'images/products/folding-case.jpg'],
-            ['Eyeglass Sunglass Repair with Nose Pads Washer Caps Screwdriver Tiny Micro Screws Assortment Stainless Spectacles Watch', 'Generic', 699, 599, ['Accessories'], 30, ['new'], 'images/products/repair-kit.jpg'],
-            ['John Jacobs Transparent Full Rim Cat Eye with Premium Anti-Glare Lenses', 'John Jacobs', 3500, 2500, ['John Jacobs', 'Spectacle Frames', 'Spectacles'], 12, ['featured', 'tryon'], 'images/products/cat-eye.jpg'],
-            ['Aquacolor Candypack Misty Gray Zero Power Daily', 'Aquacolor', 179, null, ['Lens'], 80, [], 'images/products/aquacolor.jpg'],
-            ['VILLAIN WINGMAN BOTTLE OPENER SUNGLASSES', 'Villain', 599, null, ['Sunglasses', 'Man'], 15, [], 'images/products/villain-wingman.jpg'],
-            ['Vincent Chase Online Pink Full Rim Wayfarer', 'Vincent Chase', 800, null, ['Sunglasses'], 18, ['tryon'], 'images/products/vincent-chase-pink.jpg'],
-            ['Air Light Blue Square Eyeglasses (TR02MG4541-C6)', 'Air', 2199, 999, ['Spectacle Frames', 'Spectacles', 'Man'], 20, ['featured'], 'images/products/air-light-blue.jpg'],
-            ['Air Online Green Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 800, ['Spectacle Frames', 'Spectacles'], 22, ['featured', 'tryon'], 'images/products/air-green-round.jpg'],
-            ['Air Transparent Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 1500, ['Spectacle Frames', 'Spectacles'], 14, [], 'images/products/air-transparent-round.jpg'],
-            ['Apex Transparent Square Eyeglasses (V62005MG5369-C4)', 'Generic', null, null, ['Spectacle Frames', 'Man'], 0, [], 'images/products/air-transparent-round.jpg'],
-            ['Black & Silver Retro Square Sunglasses (MG2970-C1)', 'Generic', 3000, 2299, ['Sunglasses', 'Man'], 9, [], 'images/products/retro-square-sunglasses.jpg'],
-            ['John Jacobs Green Full Rim Wayfarer', 'John Jacobs', 4000, 2400, ['John Jacobs', 'Spectacles', 'Sunglasses'], 11, ['featured', 'tryon'], 'images/products/air-green-round.jpg'],
-            ['Pink Gradient Black Full Rim Wayfarer', 'Generic', 1800, null, ['Sunglasses'], 10, ['tryon'], 'images/products/vincent-chase-pink.jpg'],
-            ['Kids Flexi Round Frame', 'Generic', 1200, 999, ['Kids Spectacles', 'Spectacle Frames'], 16, [], 'images/products/air-green-round.jpg'],
+            ['Equate Streak-Free Lens Cleaner 8 oz Spray Bottle', 'Generic', 169, 149, ['Accessories'], 40, ['new'], [
+                'images/products/lens-cleaner.jpg',
+                'images/products/lens-cleaner-2.jpg',
+            ]],
+            ['MR.Siga Microfiber Cleaning Cloths for Lens, Eyeglasses, Gray and Navy 6 Pack, 8 x 7 Inches', 'Generic', 499, 449, ['Accessories'], 60, ['new'], [
+                'images/products/microfiber-cloths.jpg',
+                'images/products/microfiber-cloths-2.jpg',
+            ]],
+            ['Voyage Folding Spectacle Case', 'Voyage', 199, null, ['Accessories'], 25, ['new'], [
+                'images/products/folding-case.jpg',
+                'images/products/folding-case-2.jpg',
+                'images/products/folding-case-3.jpg',
+            ]],
+            ['Eyeglass Sunglass Repair with Nose Pads Washer Caps Screwdriver Tiny Micro Screws Assortment Stainless Spectacles Watch', 'Generic', 699, 599, ['Accessories'], 30, ['new'], [
+                'images/products/repair-kit.jpg',
+                'images/products/repair-kit-2.jpg',
+                'images/products/repair-kit-3.jpg',
+            ]],
+            ['John Jacobs Transparent Full Rim Cat Eye with Premium Anti-Glare Lenses', 'John Jacobs', 3500, 2500, ['John Jacobs', 'Spectacle Frames', 'Spectacles'], 12, ['featured', 'tryon'], ['images/products/cat-eye.jpg']],
+            ['Aquacolor Candypack Misty Gray Zero Power Daily', 'Aquacolor', 179, null, ['Lens'], 80, [], ['images/products/aquacolor.jpg']],
+            ['VILLAIN WINGMAN BOTTLE OPENER SUNGLASSES', 'Villain', 599, null, ['Sunglasses', 'Man'], 15, [], ['images/products/villain-wingman.jpg']],
+            ['Vincent Chase Online Pink Full Rim Wayfarer', 'Vincent Chase', 800, null, ['Sunglasses'], 18, ['tryon'], ['images/products/vincent-chase-pink.jpg']],
+            ['Air Light Blue Square Eyeglasses (TR02MG4541-C6)', 'Air', 2199, 999, ['Spectacle Frames', 'Spectacles', 'Man'], 20, ['featured'], ['images/products/air-light-blue.jpg']],
+            ['Air Online Green Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 800, ['Spectacle Frames', 'Spectacles'], 22, ['featured', 'tryon'], ['images/products/air-green-round.jpg']],
+            ['Air Transparent Full Rim Round with Premium Anti-Glare Lenses', 'Air', 2000, 1500, ['Spectacle Frames', 'Spectacles'], 14, [], ['images/products/air-transparent-round.jpg']],
+            ['Apex Transparent Square Eyeglasses (V62005MG5369-C4)', 'Generic', null, null, ['Spectacle Frames', 'Man'], 0, [], ['images/products/air-transparent-round.jpg']],
+            ['Black & Silver Retro Square Sunglasses (MG2970-C1)', 'Generic', 3000, 2299, ['Sunglasses', 'Man'], 9, [], ['images/products/retro-square-sunglasses.jpg']],
+            ['John Jacobs Green Full Rim Wayfarer', 'John Jacobs', 4000, 2400, ['John Jacobs', 'Spectacles', 'Sunglasses'], 11, ['featured', 'tryon'], ['images/products/air-green-round.jpg']],
+            ['Pink Gradient Black Full Rim Wayfarer', 'Generic', 1800, null, ['Sunglasses'], 10, ['tryon'], ['images/products/vincent-chase-pink.jpg']],
+            ['Kids Flexi Round Frame', 'Generic', 1200, 999, ['Kids Spectacles', 'Spectacle Frames'], 16, [], ['images/products/air-green-round.jpg']],
         ];
 
-        foreach ($rows as $i => [$name, $brand, $price, $sale, $catNames, $stock, $flags, $img]) {
+        foreach ($rows as $i => [$name, $brand, $price, $sale, $catNames, $stock, $flags, $imgList]) {
             $p = Product::firstOrCreate(['slug' => Str::slug($name)], [
                 'brand_id' => $brands[$brand]->id, 'name' => $name, 'sku' => 'JBO-'.str_pad($i + 1, 4, '0', STR_PAD_LEFT), 'type' => 'simple',
                 'short_description' => 'Premium optical eyewear designed for everyday comfort, style, and clear vision.',
@@ -59,8 +73,11 @@ class CatalogSeeder extends Seeder
             ]);
             if ($p->wasRecentlyCreated) {
                 $p->categories()->sync(collect($catNames)->map(fn ($n) => $cats[$n]->id));
-                $imgPath = str_starts_with($img, 'images/') ? $img : "images/placeholders/prod-{$img}.svg";
-                $p->images()->create(['path' => $imgPath, 'alt' => $name, 'position' => 0]);
+                $images = is_array($imgList) ? $imgList : [$imgList];
+                foreach ($images as $pos => $img) {
+                    $imgPath = str_starts_with($img, 'images/') ? $img : "images/placeholders/prod-{$img}.svg";
+                    $p->images()->create(['path' => $imgPath, 'alt' => $name, 'position' => $pos]);
+                }
             }
         }
 
