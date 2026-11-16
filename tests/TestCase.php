@@ -10,6 +10,6 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Setting::flush(); // settings are memoised statically; reset between tests
+        Setting::flush(); 
     }
 }
