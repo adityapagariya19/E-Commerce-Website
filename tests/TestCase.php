@@ -1,7 +1,5 @@
 <?php
-
 namespace Tests;
-
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
