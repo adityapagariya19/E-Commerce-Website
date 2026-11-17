@@ -12,9 +12,18 @@ use Illuminate\Validation\Rule;
 
 class CouponController extends Controller
 {
-    public function index() { return view('admin.coupons.index', ['coupons' => Coupon::withCount('usages')->latest()->get()]); }
-    public function create() { return view('admin.coupons.form', ['coupon' => new Coupon(['type' => 'percent', 'is_active' => true]), 'products' => Product::orderBy('name')->get(['id', 'name']), 'categories' => Category::orderBy('name')->get(['id', 'name'])]); }
-    public function edit(Coupon $coupon) { return view('admin.coupons.form', ['coupon' => $coupon, 'products' => Product::orderBy('name')->get(['id', 'name']), 'categories' => Category::orderBy('name')->get(['id', 'name'])]); }
+    public function index()
+    {
+        return view('admin.coupons.index', ['coupons' => Coupon::withCount('usages')->latest()->get()]);
+    }
+    public function create()
+    {
+        return view('admin.coupons.form', ['coupon' => new Coupon(['type' => 'percent', 'is_active' => true]), 'products' => Product::orderBy('name')->get(['id', 'name']), 'categories' => Category::orderBy('name')->get(['id', 'name'])]);
+    }
+    public function edit(Coupon $coupon)
+    {
+        return view('admin.coupons.form', ['coupon' => $coupon, 'products' => Product::orderBy('name')->get(['id', 'name']), 'categories' => Category::orderBy('name')->get(['id', 'name'])]);
+    }
     public function store(Request $r) { $this->save($r, new Coupon()); return redirect()->route('admin.coupons.index')->with('success', 'Coupon created.'); }
     public function update(Request $r, Coupon $coupon) { $this->save($r, $coupon); return redirect()->route('admin.coupons.index')->with('success', 'Coupon updated.'); }
 
