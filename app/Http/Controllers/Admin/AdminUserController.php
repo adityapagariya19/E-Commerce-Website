@@ -11,8 +11,14 @@ use Illuminate\Validation\Rules\Password;
 
 class AdminUserController extends Controller
 {
-    public function index() { return view('admin.users.index', ['users' => User::where('role', '!=', 'customer')->orderBy('name')->get()]); }
-    public function create() { return view('admin.users.form', ['user' => new User(['is_active' => true, 'role' => 'super_admin'])]); }
+    public function index()
+    {
+        return view('admin.users.index', ['users' => User::where('role', '!=', 'customer')->orderBy('name')->get()]);
+    }
+    public function create()
+    {
+        return view('admin.users.form', ['user' => new User(['is_active' => true, 'role' => 'super_admin'])]);
+    }
     public function edit(User $user) { abort_if($user->role === 'customer', 404); return view('admin.users.form', compact('user')); }
 
     public function store(Request $request)
