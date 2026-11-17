@@ -14,13 +14,19 @@ class CartController extends Controller
     }
 
     public function index()
+
     {
+
         return view('store.cart', ['summary' => $this->cart->summary()]);
+
     }
 
     public function drawer()
+
     {
+
         return response()->json(['html' => view('store.partials.cart-drawer', ['summary' => $this->cart->summary()])->render(), 'count' => $this->cart->count()]);
+
     }
 
     public function add(Request $request)
