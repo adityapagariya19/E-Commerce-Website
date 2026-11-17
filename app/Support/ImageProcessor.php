@@ -22,13 +22,19 @@ class ImageProcessor
     private const MAX_PIXELS = 50_000_000;
 
     public static function available(): bool
+
     {
+
         return function_exists('imagecreatefromstring') && function_exists('imagejpeg');
+
     }
 
     public static function variantPath(string $path, string $variant): string
+
     {
+
         return preg_replace('/(\.[A-Za-z0-9]+)$/', '-'.$variant.'$1', $path);
+
     }
 
     public static function webpPath(string $path, ?string $variant = null): string
