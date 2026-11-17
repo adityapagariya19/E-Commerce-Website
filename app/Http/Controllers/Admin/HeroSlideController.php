@@ -10,9 +10,18 @@ use Illuminate\Http\Request;
 
 class HeroSlideController extends Controller
 {
-    public function index() { return view('admin.hero.index', ['slides' => HeroSlide::orderBy('position')->orderBy('id')->get()]); }
-    public function create() { return view('admin.hero.form', ['slide' => new HeroSlide(['is_active' => true, 'position' => HeroSlide::count()])]); }
-    public function edit(HeroSlide $hero_slide) { return view('admin.hero.form', ['slide' => $hero_slide]); }
+    public function index()
+    {
+        return view('admin.hero.index', ['slides' => HeroSlide::orderBy('position')->orderBy('id')->get()]);
+    }
+    public function create()
+    {
+        return view('admin.hero.form', ['slide' => new HeroSlide(['is_active' => true, 'position' => HeroSlide::count()])]);
+    }
+    public function edit(HeroSlide $hero_slide)
+    {
+        return view('admin.hero.form', ['slide' => $hero_slide]);
+    }
     public function store(Request $r) { $this->save($r, new HeroSlide()); return redirect()->route('admin.hero-slides.index')->with('success', 'Slide created.'); }
     public function update(Request $r, HeroSlide $hero_slide) { $this->save($r, $hero_slide); return redirect()->route('admin.hero-slides.index')->with('success', 'Slide updated.'); }
 
