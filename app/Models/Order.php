@@ -15,21 +15,57 @@ class Order extends Model
         'placed_at' => 'datetime', 'paid_at' => 'datetime', 'cancelled_at' => 'datetime',
     ];
 
-    public function user() { return $this->belongsTo(User::class); }
-    public function items() { return $this->hasMany(OrderItem::class); }
-    public function histories() { return $this->hasMany(OrderStatusHistory::class)->latest('id'); }
-    public function payments() { return $this->hasMany(Payment::class); }
-    public function refunds() { return $this->hasMany(Refund::class); }
-    public function couponUsages() { return $this->hasMany(CouponUsage::class); }
+    public function user()
 
-    public function getRouteKeyName(): string { return 'id'; }
+    {
+
+        return $this->belongsTo(User::class);
+
+    }
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+    public function histories()
+    {
+        return $this->hasMany(OrderStatusHistory::class)->latest('id');
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class);
+    }
+    public function couponUsages()
+    {
+        return $this->hasMany(CouponUsage::class);
+    }
+
+    public function getRouteKeyName(): string
+
+    {
+
+        return 'id';
+
+    }
     public function paymentMethodLabel(): string
     {
         return ['cod' => 'Cash on delivery', 'razorpay' => 'Credit Card/Debit Card/NetBanking (Razorpay)'][$this->payment_method] ?? $this->payment_method;
     }
-    public function statusLabel(): string { return order_status_label($this->status); }
-    public function isPayable(): bool { return $this->payment_method === 'razorpay' && $this->status === 'pending_payment'; }
-    public function netTotal(): float { return (float) $this->total - (float) $this->refunded_total; }
+    public function statusLabel(): string
+    {
+        return order_status_label($this->status);
+    }
+    public function isPayable(): bool
+    {
+        return $this->payment_method === 'razorpay' && $this->status === 'pending_payment';
+    }
+    public function netTotal(): float
+    {
+        return (float) $this->total - (float) $this->refunded_total;
+    }
 
     /** Customers may cancel unpaid online orders, and COD orders that have not been packed/shipped yet. */
     public function customerCanCancel(): bool
@@ -39,8 +75,11 @@ class Order extends Model
     }
 
     public function hasTracking(): bool
+
     {
+
         return (bool) ($this->courier_name || $this->tracking_number || $this->tracking_url);
+
     }
 
     public static function nextNumber(): int
