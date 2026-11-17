@@ -12,8 +12,11 @@ class ShopController extends Controller
     private const PER_PAGE = 6; // reference: "Showing 1–6 of 33 results"
 
     public function index(Request $request)
+
     {
+
         return $this->render($request, null);
+
     }
 
     public function category(Request $request, Category $category)
