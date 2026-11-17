@@ -1,3 +1,4 @@
+{{-- JB Optician Storefront --}}
 <div class="drawer__body">
 @forelse($summary['cart_lines'] as $l)
   <div class="cart__item" style="grid-template-columns:60px 1fr auto">
