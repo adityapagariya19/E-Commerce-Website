@@ -1,3 +1,4 @@
+{{-- JB Optician Storefront --}}
 @php($pr = $product->listingPricing())
 @if($pr['current'] !== null)
   <span class="price">
