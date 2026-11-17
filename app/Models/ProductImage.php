@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class ProductImage extends Model
 {
     protected $guarded = [];
-    public function product() { return $this->belongsTo(Product::class); }
-    public function getUrlAttribute(): string { return media_url($this->path); }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function getUrlAttribute(): string
+    {
+        return media_url($this->path);
+    }
 }
