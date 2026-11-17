@@ -38,7 +38,7 @@ class ContentSeeder extends Seeder
 
         Page::firstOrCreate(['slug' => 'about-us'], ['title' => 'About JB Optician', 'is_active' => true, 'body' =>
             "Welcome to **JB Optician**, where your vision is our mission. We specialize in high-quality eyewear, advanced lenses, and professional eye care services to meet your needs.\n\nOur store offers a wide variety of stylish frames, premium lenses, and modern contact lenses for all age groups. Our experienced staff and latest technology guarantee precision and comfort in every product.\n\nCustomer satisfaction is our top priority, and we strive to provide the best service in the industry."]);
-        
+
         $policies = [
             'privacy-policy' => ['Privacy Policy', "At **JB Optician**, we value your privacy and are committed to safeguarding your personal data.\n\nWe collect relevant information such as your name, shipping address, contact details, and prescription values solely for fulfilling your orders and ensuring accurate optical fitment. Your information is securely stored and never shared with unauthorized third parties."],
             'terms-and-conditions' => ['Terms and Conditions', "Welcome to the **JB Optician** online store. By browsing our catalog and purchasing our products, you agree to our standard store policies.\n\nAll optical products are thoroughly inspected for quality before dispatch. Prices are displayed in Indian Rupees (INR) and are inclusive of applicable taxes."],
