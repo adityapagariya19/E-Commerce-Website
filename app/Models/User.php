@@ -14,18 +14,24 @@ class User extends Authenticatable
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
+
     {
+
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+
     }
 
     public function isAdmin(): bool
+
     {
+
         return $this->role !== 'customer' && array_key_exists($this->role, config('permissions.roles', []));
+
     }
 
     public function hasPermission(string $permission): bool
@@ -37,7 +43,19 @@ class User extends Authenticatable
         return in_array('*', $perms, true) || in_array($permission, $perms, true);
     }
 
-    public function orders(): HasMany { return $this->hasMany(Order::class); }
-    public function addresses(): HasMany { return $this->hasMany(Address::class); }
-    public function roleLabel(): string { return $this->isAdmin() ? 'Admin' : 'Customer'; }
+    public function orders(): HasMany
+
+    {
+
+        return $this->hasMany(Order::class);
+
+    }
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+    public function roleLabel(): string
+    {
+        return $this->isAdmin() ? 'Admin' : 'Customer';
+    }
 }
