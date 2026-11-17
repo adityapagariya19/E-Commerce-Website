@@ -13,7 +13,13 @@ class Coupon extends Model
         'product_ids' => 'array', 'category_ids' => 'array',
     ];
 
-    public function usages() { return $this->hasMany(CouponUsage::class); }
+    public function usages()
+
+    {
+
+        return $this->hasMany(CouponUsage::class);
+
+    }
 
     public function setCodeAttribute($value): void
     {
