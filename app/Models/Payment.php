@@ -8,5 +8,8 @@ class Payment extends Model
 {
     protected $guarded = [];
     protected $casts = ['amount' => 'decimal:2'];
-    public function order() { return $this->belongsTo(Order::class); }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
