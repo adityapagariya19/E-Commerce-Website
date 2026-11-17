@@ -9,5 +9,8 @@ class OrderStatusHistory extends Model
     public $timestamps = false;
     protected $guarded = [];
     protected $casts = ['created_at' => 'datetime'];
-    public function admin() { return $this->belongsTo(User::class, 'admin_id'); }
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 }
