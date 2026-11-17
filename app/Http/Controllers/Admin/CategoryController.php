@@ -18,8 +18,11 @@ class CategoryController extends Controller
     }
 
     public function create()
+
     {
+
         return view('admin.categories.form', ['category' => new Category(['is_active' => true]), 'parents' => Category::orderBy('name')->get()]);
+
     }
 
     public function store(Request $request)
@@ -30,8 +33,11 @@ class CategoryController extends Controller
     }
 
     public function edit(Category $category)
+
     {
+
         return view('admin.categories.form', ['category' => $category, 'parents' => Category::where('id', '!=', $category->id)->whereNotIn('id', $category->descendantIds())->orderBy('name')->get()]);
+
     }
 
     public function update(Request $request, Category $category)
