@@ -34,7 +34,11 @@ class Setting extends Model
             return $default;
         }
         if ($row['s']) {
-            try { return Crypt::decryptString($row['v']); } catch (\Throwable $e) { return $default; }
+            try {
+                return Crypt::decryptString($row['v']);
+            } catch (\Throwable $e) {
+                return $default;
+            }
         }
         return $row['v'];
     }
