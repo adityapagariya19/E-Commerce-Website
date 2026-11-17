@@ -23,12 +23,35 @@ class Product extends Model
         'published_at' => 'datetime',
     ];
 
-    public function brand(): BelongsTo { return $this->belongsTo(Brand::class); }
-    public function categories(): BelongsToMany { return $this->belongsToMany(Category::class); }
-    public function images(): HasMany { return $this->hasMany(ProductImage::class)->orderBy('position')->orderBy('id'); }
-    public function variants(): HasMany { return $this->hasMany(ProductVariant::class); }
-    public function reviews(): HasMany { return $this->hasMany(Review::class); }
-    public function approvedReviews(): HasMany { return $this->hasMany(Review::class)->where('status', 'approved'); }
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('position')->orderBy('id');
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->where('status', 'approved');
+    }
 
     public function scopePublished($q)
     {
@@ -36,7 +59,10 @@ class Product extends Model
             ->where(fn ($w) => $w->whereNull('published_at')->orWhere('published_at', '<=', now()));
     }
 
-    public function isVariable(): bool { return $this->type === 'variable'; }
+    public function isVariable(): bool
+    {
+        return $this->type === 'variable';
+    }
 
     /** @return array{regular: ?float, sale: ?float, current: ?float} */
     public function pricing(?ProductVariant $variant = null): array
