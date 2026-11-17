@@ -31,8 +31,11 @@ class ProductController extends Controller
     }
 
     public function create()
+
     {
+
         return view('admin.products.form', ['product' => new Product(['status' => 'draft', 'type' => 'simple', 'manage_stock' => true]), 'categories' => Category::orderBy('name')->get(), 'brands' => Brand::orderBy('name')->get()]);
+
     }
 
     public function store(Request $request)
@@ -48,8 +51,11 @@ class ProductController extends Controller
     }
 
     public function edit(Product $product)
+
     {
+
         return view('admin.products.form', ['product' => $product->load(['images', 'variants', 'categories']), 'categories' => Category::orderBy('name')->get(), 'brands' => Brand::orderBy('name')->get()]);
+
     }
 
     public function update(Request $request, Product $product)
