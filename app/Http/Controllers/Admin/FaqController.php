@@ -13,8 +13,14 @@ class FaqController extends Controller
     {
         return view('admin.faq.index', ['faqs' => Faq::with('topic')->when($request->filled('topic'), fn ($q) => $q->where('faq_topic_id', $request->query('topic')))->orderBy('faq_topic_id')->orderBy('position')->get(), 'topics' => FaqTopic::orderBy('position')->get()]);
     }
-    public function create() { return view('admin.faq.form', ['faq' => new Faq(['is_active' => true]), 'topics' => FaqTopic::orderBy('position')->get()]); }
-    public function edit(Faq $faq) { return view('admin.faq.form', ['faq' => $faq, 'topics' => FaqTopic::orderBy('position')->get()]); }
+    public function create()
+    {
+        return view('admin.faq.form', ['faq' => new Faq(['is_active' => true]), 'topics' => FaqTopic::orderBy('position')->get()]);
+    }
+    public function edit(Faq $faq)
+    {
+        return view('admin.faq.form', ['faq' => $faq, 'topics' => FaqTopic::orderBy('position')->get()]);
+    }
     public function store(Request $r) { $this->save($r, new Faq()); return redirect()->route('admin.faqs.index')->with('success', 'Question saved.'); }
     public function update(Request $r, Faq $faq) { $this->save($r, $faq); return redirect()->route('admin.faqs.index')->with('success', 'Question saved.'); }
     public function destroy(Faq $faq) { $faq->delete(); return back()->with('success', 'Question deleted.'); }
