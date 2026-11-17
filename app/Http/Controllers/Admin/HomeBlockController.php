@@ -17,11 +17,20 @@ class HomeBlockController extends Controller
     }
 
     public function create(Request $request)
+
     {
+
         return view('admin.blocks.form', ['block' => new HomeBlock(['section' => $request->query('section', 'collage'), 'is_active' => true])]);
+
     }
 
-    public function edit(HomeBlock $block) { return view('admin.blocks.form', compact('block')); }
+    public function edit(HomeBlock $block)
+
+    {
+
+        return view('admin.blocks.form', compact('block'));
+
+    }
     public function store(Request $r) { $this->save($r, new HomeBlock()); return redirect()->route('admin.blocks.index')->with('success', 'Block created.'); }
     public function update(Request $r, HomeBlock $block) { $this->save($r, $block); return redirect()->route('admin.blocks.index')->with('success', 'Block updated.'); }
 
