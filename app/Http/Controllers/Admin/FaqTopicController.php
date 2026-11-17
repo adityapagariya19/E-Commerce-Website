@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class FaqTopicController extends Controller
 {
-    public function index() { return view('admin.faq.topics', ['topics' => FaqTopic::withCount('faqs')->orderBy('position')->get()]); }
-    public function create() { return view('admin.faq.topic-form', ['topic' => new FaqTopic(['is_active' => true])]); }
-    public function edit(FaqTopic $faq_topic) { return view('admin.faq.topic-form', ['topic' => $faq_topic]); }
+    public function index()
+    {
+        return view('admin.faq.topics', ['topics' => FaqTopic::withCount('faqs')->orderBy('position')->get()]);
+    }
+    public function create()
+    {
+        return view('admin.faq.topic-form', ['topic' => new FaqTopic(['is_active' => true])]);
+    }
+    public function edit(FaqTopic $faq_topic)
+    {
+        return view('admin.faq.topic-form', ['topic' => $faq_topic]);
+    }
     public function store(Request $r) { $this->save($r, new FaqTopic()); return redirect()->route('admin.faq-topics.index')->with('success', 'Topic saved.'); }
     public function update(Request $r, FaqTopic $faq_topic) { $this->save($r, $faq_topic); return redirect()->route('admin.faq-topics.index')->with('success', 'Topic saved.'); }
     public function destroy(FaqTopic $faq_topic) { $faq_topic->delete(); return back()->with('success', 'Topic and its questions deleted.'); }
