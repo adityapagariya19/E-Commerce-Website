@@ -20,18 +20,27 @@ class AccountController extends Controller
     }
 
     public function dashboard(Request $request)
+
     {
+
         return view('account.dashboard', ['recent' => $request->user()->orders()->latest('placed_at')->limit(3)->get()]);
+
     }
 
     public function orders(Request $request)
+
     {
+
         return view('account.orders', ['orders' => $request->user()->orders()->withCount('items')->latest('placed_at')->paginate(10)]);
+
     }
 
     public function order(Request $request, Order $order)
+
     {
+
         return view('account.order', ['order' => $this->myOrder($request, $order)->load('items', 'histories')]);
+
     }
 
     public function cancel(Request $request, Order $order, OrderService $orders)
@@ -55,13 +64,19 @@ class AccountController extends Controller
     }
 
     public function downloads()
+
     {
+
         return view('account.downloads');
+
     }
 
     public function addresses(Request $request)
+
     {
+
         return view('account.addresses', ['addresses' => $request->user()->addresses()->get(), 'states' => CheckoutController::STATES]);
+
     }
 
     public function saveAddress(Request $request, ?Address $address = null)
@@ -89,8 +104,11 @@ class AccountController extends Controller
     }
 
     public function details()
+
     {
+
         return view('account.details');
+
     }
 
     public function updateDetails(Request $request)
