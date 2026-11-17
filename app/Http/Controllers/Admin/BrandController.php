@@ -12,9 +12,18 @@ use Illuminate\Validation\Rule;
 
 class BrandController extends Controller
 {
-    public function index() { return view('admin.brands.index', ['brands' => Brand::withCount('products')->orderBy('name')->get()]); }
-    public function create() { return view('admin.brands.form', ['brand' => new Brand(['is_active' => true])]); }
-    public function edit(Brand $brand) { return view('admin.brands.form', compact('brand')); }
+    public function index()
+    {
+        return view('admin.brands.index', ['brands' => Brand::withCount('products')->orderBy('name')->get()]);
+    }
+    public function create()
+    {
+        return view('admin.brands.form', ['brand' => new Brand(['is_active' => true])]);
+    }
+    public function edit(Brand $brand)
+    {
+        return view('admin.brands.form', compact('brand'));
+    }
 
     public function store(Request $request) { $this->save($request, new Brand()); return redirect()->route('admin.brands.index')->with('success', 'Brand created.'); }
     public function update(Request $request, Brand $brand) { $this->save($request, $brand); return redirect()->route('admin.brands.index')->with('success', 'Brand updated.'); }
