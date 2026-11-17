@@ -11,9 +11,18 @@ use Illuminate\Validation\Rule;
 
 class PageController extends Controller
 {
-    public function index() { return view('admin.pages.index', ['pages' => Page::orderBy('title')->get()]); }
-    public function create() { return view('admin.pages.form', ['page' => new Page(['is_active' => true])]); }
-    public function edit(Page $page) { return view('admin.pages.form', compact('page')); }
+    public function index()
+    {
+        return view('admin.pages.index', ['pages' => Page::orderBy('title')->get()]);
+    }
+    public function create()
+    {
+        return view('admin.pages.form', ['page' => new Page(['is_active' => true])]);
+    }
+    public function edit(Page $page)
+    {
+        return view('admin.pages.form', compact('page'));
+    }
     public function store(Request $r) { $this->save($r, new Page()); return redirect()->route('admin.pages.index')->with('success', 'Page created.'); }
     public function update(Request $r, Page $page) { $this->save($r, $page); return redirect()->route('admin.pages.index')->with('success', 'Page updated.'); }
 
